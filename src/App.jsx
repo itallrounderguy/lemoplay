@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.jsx
+import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from 'jwt-decode';
 
-function App() {
-  const [count, setCount] = useState(0)
+import "./App.css";
+
+const App = () => {
+  const [user, setUser] = useState(null);
+
+  const handleLoginSuccess = (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+      setUser(decoded); // You get name, email, picture here
+      console.log("User Info:", decoded);
+    } catch (error) {
+      console.error("JWT decode error:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container">
+      <div className="header">
+        <h1 className="logo-wrapper">
+          <iframe
+            src="https://learnify2025.s3.us-east-1.amazonaws.com/logo/logo.html"
+            width="256"
+            height="256"
+            className="logo-iframe"
+            title="Lemo"
+            scrolling="no"
+            allowTransparency="true"
+          ></iframe>
+        </h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
 
-export default App
+      <div className="login-section">
+        {!user ? (
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          />
+        ) : (
+          <div className="user-info">
+            <p>Welcome, {user.name}</p>
+            <img src={user.picture} alt="Profile" width="80" height="80" />
+            <p>Email: {user.email}</p>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default App;
