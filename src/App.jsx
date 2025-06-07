@@ -5,6 +5,8 @@ import Header from './components/Header';
 import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import './App.css'; // ✅ THIS LINE IS ESSENTIAL
+
 
 // Context to share user info globally
 export const UserContext = createContext(null);

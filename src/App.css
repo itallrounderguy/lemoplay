@@ -17,6 +17,13 @@ body {
   overflow-x: hidden;
 }
 
+
+body, h1, h2, h3, h4, h5, h6, p {
+  color: black;
+}
+
+
+
 /* === Container === */
 .container {
   display: flex;
@@ -46,11 +53,11 @@ body {
   background-color: transparent;
 }
 
-/* === Login Section === */
+/* === Login Section === 
 .login-section {
   margin-top: 20px;
   text-align: center;
-}
+}*/
 
 /* === User Info === */
 .user-info {
