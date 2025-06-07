@@ -28,16 +28,17 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Please log in to continue</h2>
-      <GoogleLogin
-        ux_mode="popup" // ✅ Force popup login to avoid redirect
-        onSuccess={handleLoginSuccess}
-        onError={() => {
-        console.log('Login Failed');
-        }}
-      />
-    </div>
+   <div className="login-section">
+  <h2>Please log in to continue</h2>
+  <div className="google-btn-wrapper">
+    <GoogleLogin
+      ux_mode="popup"
+      onSuccess={handleLoginSuccess}
+      onError={() => console.log("Login Failed")}
+    />
+  </div>
+</div>
+
   );
 };
 

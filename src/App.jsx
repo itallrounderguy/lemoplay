@@ -11,6 +11,8 @@ import './App.css'; // ✅ THIS LINE IS ESSENTIAL
 // Context to share user info globally
 export const UserContext = createContext(null);
 
+
+
 // Route protection wrapper
 const ProtectedRoute = ({ user, children }) => {
   const location = useLocation();
@@ -19,12 +21,17 @@ const ProtectedRoute = ({ user, children }) => {
     : <Navigate to="/login" state={{ from: location }} replace />;
 };
 
+
+
 const App = () => {
   // Load user from localStorage if available
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('user');
     return stored ? JSON.parse(stored) : null;
   });
+
+
+
 
   // When user changes, update localStorage
   useEffect(() => {
@@ -34,6 +41,11 @@ const App = () => {
       localStorage.removeItem('user');
     }
   }, [user]);
+
+
+
+
+
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
