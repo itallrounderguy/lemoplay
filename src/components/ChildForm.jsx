@@ -1,3 +1,5 @@
+//childform.jsx
+ 
 import { useState } from 'react';
 import './ChildForm.css';
 
@@ -33,14 +35,9 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
       const data = await res.json();
 
       if (res.ok) {
-        onSuccess({
-          childId: data.childId,
-          childName,
-          childAge,
-          avatar
-        });
-        onClose();
-      } else {
+  onSuccess(); // ✅ No data passed
+  onClose();
+} else {
         alert('Failed to add child: ' + data.message);
       }
     } catch (err) {

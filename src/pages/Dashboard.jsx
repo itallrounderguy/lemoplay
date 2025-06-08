@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 import ChildForm from '../components/ChildForm';
-import './Dashboard.css'; // Make sure this file exists and is imported
+import './Dashboard.css';
 
 const PLAYER_API = 'https://1bt9pt3of2.execute-api.us-east-1.amazonaws.com/items';
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
@@ -14,8 +14,29 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [showChildForm, setShowChildForm] = useState(false);
 
+  const fetchChildren = async (userId) => {
+    try {
+      const childRes = await fetch(`${CHILDREN_API}/${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId,
+        },
+      });
+
+      if (childRes.ok) {
+        const childrenList = await childRes.json();
+        setChildren(childrenList);
+      } else {
+        console.warn('No children found or failed to fetch children.');
+      }
+    } catch (err) {
+      console.error('Error fetching children:', err);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
+
     const userId = user.sub;
 
     const fetchOrCreatePlayer = async () => {
@@ -39,15 +60,17 @@ const Dashboard = () => {
             email: user.email,
             language: 'en',
           };
+
           const createRes = await fetch(PLAYER_API, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newPlayer),
           });
-          const createData = await createRes.json();
+
           if (createRes.ok) {
             setPlayerData(newPlayer);
           } else {
+            const createData = await createRes.json();
             setError(`Failed to create player: ${createData.message || createData}`);
             return;
           }
@@ -56,19 +79,7 @@ const Dashboard = () => {
           return;
         }
 
-        const childRes = await fetch(`${CHILDREN_API}/${userId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'x-user-id': userId,
-          },
-        });
-
-        if (childRes.ok) {
-          const childrenList = await childRes.json();
-          setChildren(childrenList);
-        } else {
-          console.warn('No children found or failed to fetch children.');
-        }
+        await fetchChildren(userId);
 
       } catch (err) {
         console.error('Error accessing API:', err);
@@ -80,34 +91,6 @@ const Dashboard = () => {
 
     fetchOrCreatePlayer();
   }, [user]);
-
-  const handleSubmitChild = async (child) => {
-    if (children.length >= 5) {
-      alert('You can only add up to 5 children.');
-      return;
-    }
-
-    try {
-      const res = await fetch(`${CHILDREN_API}/${user.sub}/child`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': user.sub,
-        },
-        body: JSON.stringify(child),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setChildren(prev => [...prev, { ...child, childId: data.childId }]);
-        setShowChildForm(false);
-      } else {
-        console.error('Failed to create child:', await res.text());
-      }
-    } catch (err) {
-      console.error('Error submitting child:', err);
-    }
-  };
 
   if (loading) return <p>Loading your dashboard...</p>;
   if (error) return <p style={{ color: 'red' }}>⚠️ {error}</p>;
@@ -146,7 +129,7 @@ const Dashboard = () => {
         <ChildForm
           userId={user.sub}
           onClose={() => setShowChildForm(false)}
-          onSuccess={handleSubmitChild}
+          onSuccess={() => fetchChildren(user.sub)} // ✅ refresh children only
         />
       )}
     </div>
