@@ -183,7 +183,7 @@ const Dashboard = () => {
       {showChildForm && (
         <ChildForm
           onClose={() => setShowChildForm(false)}
-          onSubmit={handleSubmitChild}
+          onSuccess={handleSubmitChild}
         />
       )}
     </div>

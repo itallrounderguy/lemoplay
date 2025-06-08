@@ -1,64 +1,114 @@
-// components/ChildForm.jsx
 import { useState } from 'react';
-import './ChildForm.css'; // optional for styles
+import './ChildForm.css';
 
-const ChildForm = ({ onClose, onSubmit }) => {
+const avatars = [
+  'Lion', 'Tiger', 'Cat', 'Dog', 'Fox',
+  'Frog', 'Duck', 'Hippo', 'Bear', 'Giraffe',
+  'Monkey', 'Elephant', 'Owl', 'Crab', 'Robot'
+];
+
+const ChildForm = ({ userId, onClose, onSuccess }) => {
+  const [step, setStep] = useState(1);
   const [childName, setChildName] = useState('');
   const [childAge, setChildAge] = useState('');
-  const [avatar, setAvatar] = useState('lion');
-  const [error, setError] = useState('');
+  const [avatar, setAvatar] = useState('Lion');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children/${userId}/child`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId
+        },
+        body: JSON.stringify({
+          childName,
+          childAge: parseInt(childAge, 10),
+          avatar
+        })
+      });
 
-    if (!childName || !childAge || !avatar) {
-      setError('Please fill in all fields.');
-      return;
+      const data = await res.json();
+
+     if (res.ok) {
+        onSuccess({
+            childId: data.childId,
+            childName,
+            childAge,
+            avatar
+        });
+        onClose();
+        } else {
+        alert('Failed to add child: ' + data.message);
+      }
+    } catch (err) {
+      alert('Something went wrong. Check console.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-
-    onSubmit({ childName, childAge: parseInt(childAge), avatar });
-    setChildName('');
-    setChildAge('');
-    setAvatar('lion');
   };
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content child-wizard">
         <button className="close-btn" onClick={onClose}>×</button>
-        <h2>Add New Child</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <label>
-            Name:
+
+        {step === 1 && (
+          <>
+            <h2>What is your child’s name?</h2>
+            <p className="subtext">They’ll learn how to write it themselves</p>
             <input
               type="text"
               value={childName}
-              onChange={(e) => setChildName(e.target.value)}
-              required
+              onChange={e => setChildName(e.target.value)}
+              placeholder="Name"
+              className="wizard-input"
             />
-          </label>
-          <label>
-            Age:
+            <button disabled={!childName} onClick={() => setStep(2)}>Continue</button>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <h2>How old is {childName}?</h2>
+            <p className="subtext">We’ll personalize the experience</p>
             <input
               type="number"
-              min="1"
               value={childAge}
-              onChange={(e) => setChildAge(e.target.value)}
-              required
+              onChange={e => setChildAge(e.target.value)}
+              placeholder="Age"
+              className="wizard-input"
+              min="1"
             />
-          </label>
-          <label>
-            Avatar:
-            <select value={avatar} onChange={(e) => setAvatar(e.target.value)}>
-              <option value="lion">Lion</option>
-              <option value="cat">Cat</option>
-              <option value="dog">Dog</option>
-              <option value="fox">Fox</option>
-            </select>
-          </label>
-          <button type="submit">Add Child</button>
-        </form>
+            <button disabled={!childAge} onClick={() => setStep(3)}>Continue</button>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2>Choose a Character for {childName}</h2>
+            <div className="avatar-grid">
+              {avatars.map(name => (
+                <div
+                  key={name}
+                  className={`avatar-option ${avatar === name ? 'selected' : ''}`}
+                  onClick={() => setAvatar(name)}
+                >
+                  <img
+                    src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${name}`}
+                    alt={name}
+                  />
+                </div>
+              ))}
+            </div>
+            <button onClick={handleSubmit} disabled={loading}>
+              {loading ? 'Adding...' : 'Add Child'}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
