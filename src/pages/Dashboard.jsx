@@ -58,8 +58,14 @@ const Dashboard = () => {
           return;
         }
 
-        // ✅ Fetch children after confirming player record
-        const childRes = await fetch(`${CHILDREN_API}/${userId}`);
+        // ✅ Fetch children (with x-user-id header)
+        const childRes = await fetch(`${CHILDREN_API}/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-id': userId // 👈 Custom auth header
+          }
+        });
+
         if (childRes.ok) {
           const childrenList = await childRes.json();
           setChildren(childrenList);
@@ -87,14 +93,14 @@ const Dashboard = () => {
       <p>Hello, <strong>{user.name}</strong>!</p>
 
       {playerData && (
-        <div style={{ 
-          marginTop: '20px', 
-          padding: '1rem', 
-          border: '1px solid #ccc', 
-          borderRadius: '8px', 
-          maxWidth: '400px', 
-          margin: '20px auto', 
-          textAlign: 'left' 
+        <div style={{
+          marginTop: '20px',
+          padding: '1rem',
+          border: '1px solid #ccc',
+          borderRadius: '8px',
+          maxWidth: '400px',
+          margin: '20px auto',
+          textAlign: 'left'
         }}>
           <p><strong>Player Name:</strong> {playerData.playername}</p>
           <p><strong>Email:</strong> {playerData.email}</p>
