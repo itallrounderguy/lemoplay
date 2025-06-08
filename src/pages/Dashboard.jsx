@@ -1,6 +1,6 @@
-// pages/Dashboard.jsx
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
+import ChildForm from '../components/ChildForm';
 
 const PLAYER_API = 'https://1bt9pt3of2.execute-api.us-east-1.amazonaws.com/items';
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
@@ -11,10 +11,10 @@ const Dashboard = () => {
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showChildForm, setShowChildForm] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-
     const userId = user.sub;
 
     const fetchOrCreatePlayer = async () => {
@@ -38,15 +38,12 @@ const Dashboard = () => {
             email: user.email,
             language: 'en',
           };
-
           const createRes = await fetch(PLAYER_API, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newPlayer),
           });
-
           const createData = await createRes.json();
-
           if (createRes.ok) {
             setPlayerData(newPlayer);
           } else {
@@ -58,12 +55,11 @@ const Dashboard = () => {
           return;
         }
 
-        // ✅ Fetch children (with x-user-id header)
         const childRes = await fetch(`${CHILDREN_API}/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
-            'x-user-id': userId // 👈 Custom auth header
-          }
+            'x-user-id': userId,
+          },
         });
 
         if (childRes.ok) {
@@ -84,42 +80,111 @@ const Dashboard = () => {
     fetchOrCreatePlayer();
   }, [user]);
 
+  const handleSubmitChild = async (child) => {
+    try {
+      const res = await fetch(`${CHILDREN_API}/${user.sub}/child`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': user.sub,
+        },
+        body: JSON.stringify(child),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setChildren(prev => [...prev, { ...child, childId: data.childId }]);
+        setShowChildForm(false);
+      } else {
+        console.error('Failed to create child:', await res.text());
+      }
+    } catch (err) {
+      console.error('Error submitting child:', err);
+    }
+  };
+
   if (loading) return <p>Loading your dashboard...</p>;
   if (error) return <p style={{ color: 'red' }}>⚠️ {error}</p>;
 
   return (
     <div style={{ padding: '1rem' }}>
-      <h2>Welcome to your Dashboard</h2>
       <p>Hello, <strong>{user.name}</strong>!</p>
 
-      {playerData && (
+      <div style={{ marginTop: '30px' }}>
+        <h3 style={{ textAlign: 'center' }}>Who's Leraning?</h3>
         <div style={{
+          display: 'flex',
+          gap: '20px',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
           marginTop: '20px',
-          padding: '1rem',
-          border: '1px solid #ccc',
-          borderRadius: '8px',
-          maxWidth: '400px',
-          margin: '20px auto',
-          textAlign: 'left'
         }}>
-          <p><strong>Player Name:</strong> {playerData.playername}</p>
-          <p><strong>Email:</strong> {playerData.email}</p>
-          <p><strong>Language:</strong> {playerData.language}</p>
-          <p><strong>Verified:</strong> {playerData.verified}</p>
-        </div>
-      )}
-
-      <h3 style={{ marginTop: '40px', textAlign: 'center' }}>Your Children</h3>
-      {children.length === 0 ? (
-        <p style={{ textAlign: 'center' }}>You haven't added any child profiles yet.</p>
-      ) : (
-        <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
           {children.map(child => (
-            <li key={child.childId}>
-              <strong>{child.childName}</strong> (Age: {child.childAge}, Avatar: {child.avatar})
-            </li>
+            <div
+              key={child.childId}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '90px',
+              }}
+            >
+              <div style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                backgroundColor: '#f6f6f6',
+                border: '2px solid #00bcd4',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <img
+                  src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${child.avatar || 'avatar'}`}
+                  alt="avatar"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+              <span style={{ marginTop: '5px', fontWeight: '600' }}>{child.childName}</span>
+            </div>
           ))}
-        </ul>
+
+          {/* Add Child Button */}
+          <div
+            onClick={() => setShowChildForm(true)}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'pointer',
+              width: '90px',
+              opacity: 0.6,
+            }}
+          >
+            <div style={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              border: '2px dashed #bbb',
+              backgroundColor: '#f1f1f1',
+              fontSize: '2rem',
+              color: '#777',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>+</div>
+            <span style={{ marginTop: '5px' }}>Add a child</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal for adding child */}
+      {showChildForm && (
+        <ChildForm
+          onClose={() => setShowChildForm(false)}
+          onSubmit={handleSubmitChild}
+        />
       )}
     </div>
   );
