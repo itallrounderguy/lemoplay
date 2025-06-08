@@ -1,18 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
-import ChildForm from '../components/ChildForm';
+import ChildForm from './ChildForm';
 import { Edit3, Trash2 } from 'lucide-react';
-import './Dashboard.css';
+import './Profiles.css';
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
 
-const Profile = ({ resetSelection }) => {
+const Profile = ({
+  resetSelection,
+  setSelectedChildId,
+  selectedChildId,
+  setSelectedChildData,
+}) => {
   const { user } = useContext(UserContext);
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showChildForm, setShowChildForm] = useState(false);
-  const [selectedChildId, setSelectedChildId] = useState(null);
   const [editingChild, setEditingChild] = useState(null);
 
   useEffect(() => {
@@ -41,12 +45,14 @@ const Profile = ({ resetSelection }) => {
     fetchChildren();
   }, [user]);
 
-  // Expose reset handler to Dashboard
   useEffect(() => {
     if (typeof resetSelection === 'function') {
-      resetSelection(() => () => setSelectedChildId(null));
+      resetSelection(() => () => {
+        setSelectedChildId(null);
+        setSelectedChildData(null);
+      });
     }
-  }, [resetSelection]);
+  }, [resetSelection, setSelectedChildId, setSelectedChildData]);
 
   const refreshChildren = async () => {
     const res = await fetch(`${CHILDREN_API}/${user.sub}`, {
@@ -58,6 +64,11 @@ const Profile = ({ resetSelection }) => {
     if (res.ok) {
       const data = await res.json();
       setChildren(data);
+
+      if (selectedChildId) {
+        const updatedChild = data.find(c => c.childId === selectedChildId);
+        setSelectedChildData(updatedChild || null);
+      }
     }
   };
 
@@ -73,17 +84,18 @@ const Profile = ({ resetSelection }) => {
       });
       await refreshChildren();
       setSelectedChildId(null);
+      setSelectedChildData(null);
     } catch (err) {
       console.error('Delete failed:', err);
     }
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+
   const filteredChildren = selectedChildId
     ? children.filter(c => c.childId === selectedChildId)
     : children;
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
     <div className="child-section">
@@ -94,8 +106,33 @@ const Profile = ({ resetSelection }) => {
           <div
             key={child.childId}
             className="child-card"
-            onClick={() => !selectedChildId && setSelectedChildId(child.childId)}
+            onClick={() => {
+              if (!selectedChildId) {
+                setSelectedChildId(child.childId);
+                setSelectedChildData(child);
+              }
+            }}
           >
+            {selectedChildId === child.childId && (
+              <div className="child-tools">
+                <Edit3
+                  size={18}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditingChild(child);
+                    setShowChildForm(true);
+                  }}
+                />
+                <Trash2
+                  size={18}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteChild(child.childId);
+                  }}
+                />
+              </div>
+            )}
+
             <div className="child-avatar">
               <img
                 src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${child.avatar || 'avatar'}`}
@@ -103,20 +140,6 @@ const Profile = ({ resetSelection }) => {
               />
             </div>
             <span className="child-name">{child.childName}</span>
-
-            {selectedChildId === child.childId && (
-              <div className="dropdown-menu">
-                <div onClick={() => {
-                  setEditingChild(child);
-                  setShowChildForm(true);
-                }}>
-                  <Edit3 size={18} />
-                </div>
-                <div onClick={() => handleDeleteChild(child.childId)}>
-                  <Trash2 size={18} />
-                </div>
-              </div>
-            )}
           </div>
         ))}
 
