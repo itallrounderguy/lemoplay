@@ -32,15 +32,15 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
 
       const data = await res.json();
 
-     if (res.ok) {
+      if (res.ok) {
         onSuccess({
-            childId: data.childId,
-            childName,
-            childAge,
-            avatar
+          childId: data.childId,
+          childName,
+          childAge,
+          avatar
         });
         onClose();
-        } else {
+      } else {
         alert('Failed to add child: ' + data.message);
       }
     } catch (err) {
@@ -51,13 +51,22 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
     }
   };
 
+  const StepIndicator = () => (
+    <div className="step-indicator">
+      <div className={`step-dot ${step === 1 ? 'active' : ''}`} />
+      <div className={`step-dot ${step === 2 ? 'active' : ''}`} />
+      <div className={`step-dot ${step === 3 ? 'active' : ''}`} />
+    </div>
+  );
+
   return (
     <div className="modal-overlay">
       <div className="modal-content child-wizard">
         <button className="close-btn" onClick={onClose}>×</button>
 
         {step === 1 && (
-          <>
+          <div className="step-transition">
+            <StepIndicator />
             <h2>What is your child’s name?</h2>
             <p className="subtext">They’ll learn how to write it themselves</p>
             <input
@@ -68,11 +77,12 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
               className="wizard-input"
             />
             <button disabled={!childName} onClick={() => setStep(2)}>Continue</button>
-          </>
+          </div>
         )}
 
         {step === 2 && (
-          <>
+          <div className="step-transition">
+            <StepIndicator />
             <h2>How old is {childName}?</h2>
             <p className="subtext">We’ll personalize the experience</p>
             <input
@@ -83,12 +93,16 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
               className="wizard-input"
               min="1"
             />
-            <button disabled={!childAge} onClick={() => setStep(3)}>Continue</button>
-          </>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+              <button onClick={() => setStep(1)}>Back</button>
+              <button disabled={!childAge} onClick={() => setStep(3)}>Continue</button>
+            </div>
+          </div>
         )}
 
         {step === 3 && (
-          <>
+          <div className="step-transition">
+            <StepIndicator />
             <h2>Choose a Character for {childName}</h2>
             <div className="avatar-grid">
               {avatars.map(name => (
@@ -104,10 +118,13 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
                 </div>
               ))}
             </div>
-            <button onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Adding...' : 'Add Child'}
-            </button>
-          </>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+              <button onClick={() => setStep(2)}>Back</button>
+              <button onClick={handleSubmit} disabled={loading}>
+                {loading ? 'Adding...' : 'Add Child'}
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

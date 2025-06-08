@@ -1,49 +1,166 @@
-.child-wizard {
+/* ChildForm.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999; /* high value to ensure it's above all */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   text-align: center;
-  padding-top: 2rem;
+  position: relative;
+  z-index: 10000;
+}
+
+.close-btn {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #6DD400;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 1.2rem;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #4CAF50;
 }
 
 .child-wizard h2 {
-  margin-bottom: 10px;
-  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .child-wizard .subtext {
-  color: #777;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  color: #666;
   margin-bottom: 1rem;
 }
 
 .wizard-input {
+  padding: 0.8rem;
   width: 100%;
-  padding: 10px;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
   font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+}
+
+.child-wizard button {
+  padding: 10px 20px;
+  background-color: #6DD400;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.child-wizard button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.child-wizard button:hover:enabled {
+  background-color: #57B300;
 }
 
 .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 .avatar-option {
   border: 2px solid transparent;
-  border-radius: 8px;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
-  padding: 4px;
-  transition: border-color 0.3s ease;
-  background-color: #f9f9f9;
+  transition: border 0.2s;
 }
 
 .avatar-option img {
   width: 60px;
   height: 60px;
+  border-radius: 50%;
 }
 
 .avatar-option.selected {
-  border-color: #6DD400;
+  border-color: #00bcd4;
+}
+
+.modal-overlay {
+  transition: background 0.3s ease;
+}
+
+.modal-content {
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Step Indicator */
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 8px;
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.step-dot.active {
+  background: #6DD400;
+  transform: scale(1.4);
+}
+
+/* Animate step change */
+.step-transition {
+  animation: fadeSlide 0.3s ease-in-out;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
