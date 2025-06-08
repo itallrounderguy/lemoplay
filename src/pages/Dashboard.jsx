@@ -2,11 +2,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 
-const API_BASE = 'https://1bt9pt3of2.execute-api.us-east-1.amazonaws.com/items';
+const PLAYER_API = 'https://1bt9pt3of2.execute-api.us-east-1.amazonaws.com/items';
+const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
   const [playerData, setPlayerData] = useState(null);
+  const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -17,16 +19,16 @@ const Dashboard = () => {
 
     const fetchOrCreatePlayer = async () => {
       try {
-        const res = await fetch(`${API_BASE}/${userId}`);
+        const res = await fetch(`${PLAYER_API}/${userId}`);
         if (res.ok) {
           const data = await res.json();
           if (data) {
             setPlayerData(data);
           } else {
             setError('Player record is empty.');
+            return;
           }
         } else if (res.status === 404) {
-          // Create new player
           const newPlayer = {
             id: userId,
             playername: user.name || 'New Player',
@@ -37,7 +39,7 @@ const Dashboard = () => {
             language: 'en',
           };
 
-          const createRes = await fetch(API_BASE, {
+          const createRes = await fetch(PLAYER_API, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newPlayer),
@@ -49,10 +51,22 @@ const Dashboard = () => {
             setPlayerData(newPlayer);
           } else {
             setError(`Failed to create player: ${createData.message || createData}`);
+            return;
           }
         } else {
           setError(`Unexpected error: ${res.status}`);
+          return;
         }
+
+        // ✅ Fetch children after confirming player record
+        const childRes = await fetch(`${CHILDREN_API}/${userId}`);
+        if (childRes.ok) {
+          const childrenList = await childRes.json();
+          setChildren(childrenList);
+        } else {
+          console.warn('No children found or failed to fetch children.');
+        }
+
       } catch (err) {
         console.error('Error accessing API:', err);
         setError('Failed to communicate with server.');
@@ -87,6 +101,19 @@ const Dashboard = () => {
           <p><strong>Language:</strong> {playerData.language}</p>
           <p><strong>Verified:</strong> {playerData.verified}</p>
         </div>
+      )}
+
+      <h3 style={{ marginTop: '40px', textAlign: 'center' }}>Your Children</h3>
+      {children.length === 0 ? (
+        <p style={{ textAlign: 'center' }}>You haven't added any child profiles yet.</p>
+      ) : (
+        <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
+          {children.map(child => (
+            <li key={child.childId}>
+              <strong>{child.childName}</strong> (Age: {child.childAge}, Avatar: {child.avatar})
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
