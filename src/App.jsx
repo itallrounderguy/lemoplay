@@ -5,13 +5,10 @@ import Header from './components/Header';
 import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import './App.css'; // ✅ THIS LINE IS ESSENTIAL
-
+import './App.css';
 
 // Context to share user info globally
 export const UserContext = createContext(null);
-
-
 
 // Route protection wrapper
 const ProtectedRoute = ({ user, children }) => {
@@ -21,17 +18,12 @@ const ProtectedRoute = ({ user, children }) => {
     : <Navigate to="/login" state={{ from: location }} replace />;
 };
 
-
-
 const App = () => {
   // Load user from localStorage if available
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('user');
     return stored ? JSON.parse(stored) : null;
   });
-
-
-
 
   // When user changes, update localStorage
   useEffect(() => {
@@ -42,15 +34,13 @@ const App = () => {
     }
   }, [user]);
 
-
-
-
-
+  const location = useLocation();
+  const showHeader = location.pathname === '/' || location.pathname === '/login';
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div className="container">
-        <Header />
+        {showHeader && <Header />}
         <Routes>
           {/* Default route: send to dashboard if logged in, else login */}
           <Route
