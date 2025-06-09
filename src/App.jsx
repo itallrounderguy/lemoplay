@@ -5,6 +5,10 @@ import Header from './components/Header';
 import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './components/Profiles';
+import LanguageLearn from './pages/LanguageLearn';
+import MathLearn from './pages/MathLearn';
+import LogicLearn from './pages/LogicLearn';
+import MemoryGames from './pages/MemoryGames';
 import './App.css';
 
 // Context to share user info globally
@@ -19,13 +23,11 @@ const ProtectedRoute = ({ user, children }) => {
 };
 
 const App = () => {
-  // Load user from localStorage if available
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('user');
     return stored ? JSON.parse(stored) : null;
   });
 
-  // When user changes, update localStorage
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
@@ -42,16 +44,12 @@ const App = () => {
       <div className="container">
         {showHeader && <Header />}
         <Routes>
-          {/* Default route: send to dashboard if logged in, else login */}
           <Route
             path="/"
             element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
           />
-
-          {/* Public login route */}
           <Route path="/login" element={<Login />} />
 
-          {/* Protected routes */}
           <Route
             path="/dashboard"
             element={
@@ -69,7 +67,41 @@ const App = () => {
             }
           />
 
-          {/* Catch-all fallback */}
+          {/* ✨ New Adventure Routes */}
+          <Route
+            path="/language_learn"
+            element={
+              <ProtectedRoute user={user}>
+                <LanguageLearn />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/math_learn"
+            element={
+              <ProtectedRoute user={user}>
+                <MathLearn />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/logic_learn"
+            element={
+              <ProtectedRoute user={user}>
+                <LogicLearn />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/memory_games"
+            element={
+              <ProtectedRoute user={user}>
+                <MemoryGames />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback route */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

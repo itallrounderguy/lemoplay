@@ -40,7 +40,7 @@ const Adventures = ({ childId }) => {
   const handleCardClick = (card) => {
     const audio = new Audio(card.sound);
     audio.play();
-    navigate(card.route);
+    navigate(card.route, { state: { childId } });
   };
 
   return (
