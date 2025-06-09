@@ -1,6 +1,4 @@
-//childform.jsx
- 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './ChildForm.css';
 
 const avatars = [
@@ -9,36 +7,44 @@ const avatars = [
   'Monkey', 'Elephant', 'Owl', 'Crab', 'Robot'
 ];
 
-const ChildForm = ({ userId, onClose, onSuccess }) => {
+const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
+  const isEditing = !!existingChild;
+
+  // 1. Initialize state from existingChild if present
   const [step, setStep] = useState(1);
-  const [childName, setChildName] = useState('');
-  const [childAge, setChildAge] = useState('');
-  const [avatar, setAvatar] = useState('Lion');
+  const [childName, setChildName] = useState(existingChild?.childName || '');
+  const [childAge, setChildAge] = useState(existingChild?.childAge?.toString() || '');
+  const [avatar, setAvatar] = useState(existingChild?.avatar || 'Lion');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children/${userId}/child`, {
-        method: 'POST',
+      const method = isEditing ? 'PUT' : 'POST';
+      const url = isEditing
+        ? `https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children/${userId}/child/${existingChild.childId}`
+        : `https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children/${userId}/child`;
+
+      const res = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': userId
+          'x-user-id': userId,
         },
         body: JSON.stringify({
           childName,
           childAge: parseInt(childAge, 10),
-          avatar
-        })
+          avatar,
+        }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-  onSuccess(); // ✅ No data passed
-  onClose();
-} else {
-        alert('Failed to add child: ' + data.message);
+        onSuccess(); // Refresh + close
+        onClose();
+      } else {
+        alert((isEditing ? 'Update' : 'Add') + ' failed: ' + data.message);
       }
     } catch (err) {
       alert('Something went wrong. Check console.');
@@ -118,7 +124,7 @@ const ChildForm = ({ userId, onClose, onSuccess }) => {
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
               <button onClick={() => setStep(2)}>Back</button>
               <button onClick={handleSubmit} disabled={loading}>
-                {loading ? 'Adding...' : 'Add Child'}
+                {loading ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Child' : 'Add Child')}
               </button>
             </div>
           </div>
