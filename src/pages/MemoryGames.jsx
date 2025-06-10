@@ -1,12 +1,32 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';   
 
 const MemoryGames = () => {
   const location = useLocation();
-  const childId = location.state?.childId;
+  const navigate = useNavigate();
+  const [childId, setChildId] = useState(null);
+
+  useEffect(() => {
+    const stateChildId = location.state?.childId;
+    if (stateChildId) {
+      setChildId(stateChildId);
+    } else {
+      const stored = localStorage.getItem('selectedChildId');
+      if (stored) setChildId(stored);
+    }
+  }, [location]);
+
+  const handleBack = () => {
+    navigate('/dashboard'); // No reset
+  };
 
   return (
     <div>
-      <h2>Memory Games for Child ID: {childId}</h2>
+      <button className="back-button" onClick={handleBack}>
+        <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
+        Back</button>
+      <h1>MemoryGames Adventure for Child ID: {childId}</h1>
     </div>
   );
 };
