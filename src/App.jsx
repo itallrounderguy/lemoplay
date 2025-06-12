@@ -1,7 +1,7 @@
-// App.jsx
 import { useState, createContext, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
+import GlobalMenu from './components/GlobalMenu'; // ✅ Add global menu
 import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './components/Profiles';
@@ -9,17 +9,14 @@ import LanguageLearn from './pages/LanguageLearn';
 import MathLearn from './pages/MathLearn';
 import LogicLearn from './pages/LogicLearn';
 import MemoryGames from './pages/MemoryGames';
+
 import './App.css';
 
-// Context to share user info globally
 export const UserContext = createContext(null);
 
-// Route protection wrapper
 const ProtectedRoute = ({ user, children }) => {
   const location = useLocation();
-  return user
-    ? children
-    : <Navigate to="/login" state={{ from: location }} replace />;
+  return user ? children : <Navigate to="/login" state={{ from: location }} replace />;
 };
 
 const App = () => {
@@ -37,12 +34,14 @@ const App = () => {
   }, [user]);
 
   const location = useLocation();
-  const showHeader = location.pathname === '/' || location.pathname === '/login';
+  const isAuthPage = location.pathname === '/' || location.pathname === '/login';
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div className="container">
-        {showHeader && <Header />}
+        {isAuthPage && <Header />}
+        {!isAuthPage && user && <GlobalMenu />} {/* ✅ Global menu on all protected pages */}
+
         <Routes>
           <Route
             path="/"
@@ -66,8 +65,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
-          {/* ✨ New Adventure Routes */}
           <Route
             path="/language_learn"
             element={
@@ -101,7 +98,6 @@ const App = () => {
             }
           />
 
-          {/* Fallback route */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
