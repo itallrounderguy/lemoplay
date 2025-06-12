@@ -1,13 +1,15 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import { UserContext } from '../App'; // ✅ Access user context
+import { UserContext } from '../App';
+import LogoutModal from './LogoutModal'; // ✅ import the modal
 import './GlobalMenu.css';
 
 const GlobalMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // ✅ control modal
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext); // ✅ Get setUser from context
+  const { setUser } = useContext(UserContext);
 
   const handleMenuClick = () => setShowMenu(prev => !prev);
 
@@ -16,11 +18,20 @@ const GlobalMenu = () => {
     setShowMenu(false);
   };
 
-  const handleLogout = () => {
-    setUser(null); // ✅ clear user from context
-    localStorage.removeItem('user'); // ✅ clear from storage
-    navigate('/login'); // ✅ redirect to login
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true); // ✅ show modal
     setShowMenu(false);
+  };
+
+  const handleConfirmLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    navigate('/login');
+    setShowLogoutModal(false);
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   return (
@@ -31,13 +42,16 @@ const GlobalMenu = () => {
 
       {showMenu && (
         <div className="mobile-menu">
-          <div className="menu-item" onClick={handlePlayersClick}>
-            Home
-          </div>
-          <div className="menu-item" onClick={handleLogout}>
-            Log Out
-          </div>
+          <div className="menu-item" onClick={handlePlayersClick}>Players</div>
+          <div className="menu-item" onClick={handleLogoutClick}>Log Out</div>
         </div>
+      )}
+
+      {showLogoutModal && (
+        <LogoutModal
+          onConfirm={handleConfirmLogout}
+          onCancel={handleCancelLogout}
+        />
       )}
     </>
   );
