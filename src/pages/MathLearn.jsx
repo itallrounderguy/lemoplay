@@ -1,35 +1,27 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';   
+import { ArrowLeft } from 'lucide-react';
+import useSelectedChild from '../hooks/useSelectedChild';
 
 const MathLearn = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [childId, setChildId] = useState(null);
+  const { selectedChildId } = useSelectedChild();
 
-  useEffect(() => {
-    const stateChildId = location.state?.childId;
-    if (stateChildId) {
-      setChildId(stateChildId);
-    } else {
-      const stored = localStorage.getItem('selectedChildId');
-      if (stored) setChildId(stored);
-    }
-  }, [location]);
+  const childId = location.state?.childId || selectedChildId;
 
   const handleBack = () => {
-    navigate('/dashboard'); // No reset
+    navigate('/dashboard');
   };
 
   return (
     <div>
       <button className="back-button" onClick={handleBack}>
         <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
-        Back</button>
+        Back
+      </button>
       <h1>MathLearn Adventure for Child ID: {childId}</h1>
     </div>
   );
 };
 
 export default MathLearn;
-
