@@ -3,6 +3,7 @@ import { UserContext } from '../App';
 import ChildForm from './ChildForm';
 import { Edit3, Trash2, RefreshCcw } from 'lucide-react';
 import './Profiles.css';
+import '../components/bubble.css'; // ✅ correct path
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
 

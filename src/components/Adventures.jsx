@@ -6,28 +6,28 @@ import './Adventures.css'; // Create this for styling
 const cardsData = [
   {
     id: 1,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/charachters/language_learn.png",
+    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/language_learn.png",
     sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
     text1: "Language",
     route: "/language_learn",
   },
   {
     id: 2,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/charachters/math_learn.png",
+    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/math_learn.png",
     sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
     text1: "Math",
     route: "/math_learn",
   },
   {
     id: 3,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/charachters/logic_learn.png",
+    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/logic_learn.png",
     sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
     text1: "Logic",
     route: "/logic_learn",
   },
   {
     id: 4,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/charachters/memorycards.png",
+    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/memorycards.png",
     sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
     text1: "Memory",
     route: "/memory_games",

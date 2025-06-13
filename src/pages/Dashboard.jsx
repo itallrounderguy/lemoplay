@@ -3,7 +3,7 @@ import Profiles from '../components/Profiles';
 import Adventures from '../components/Adventures';
 import useSelectedChild from '../hooks/useSelectedChild';
 import './Dashboard.css';
-import '../components/Profiles.css'; // ✅ correct path
+import '../components/bubble.css'; // ✅ correct path
 
 
 

@@ -11,7 +11,6 @@ const LogoutModal = ({ onConfirm, onCancel }) => {
           height="120"
           className="logo-iframe"
           title="Lemo Logo"
-          scrolling="no"
           allowTransparency="true"
         ></iframe>
 

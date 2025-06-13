@@ -2,8 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import useSelectedChild from '../hooks/useSelectedChild';
+import '../components/bubble.css';
+import './MemoryGames.css'; // ✅ Custom styles
 
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
+const allowedValues = [4, 6, 8, 10, 12, 14, 16, 18, 20];
 
 const MemoryGames = () => {
   const location = useLocation();
@@ -12,52 +15,50 @@ const MemoryGames = () => {
   const iframeRef = useRef(null);
 
   const [gameLoaded, setGameLoaded] = useState(false);
+  const [rows, setRows] = useState(4);
+  const [cols, setCols] = useState(4);
 
   const childId = location.state?.childId || selectedChildId;
 
-  const handleBack = () => {
-    navigate('/dashboard');
-  };
+  const handleBack = () => navigate('/dashboard');
 
   const handleSendGameSetup = () => {
     const configMessage = {
       action: 'setup',
       payload: {
-        rows: 3,
-        cols: 4,
-        childId: childId || 'unknown-child',
+        rows,
+        cols,
+        childId: childId || 'default',
       },
     };
 
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(configMessage, 'https://learnifylevels.s3.us-east-1.amazonaws.com');
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        configMessage,
+        'https://learnifylevels.s3.us-east-1.amazonaws.com'
+      );
       console.log('✅ Game setup message sent:', configMessage);
-    } else {
-      console.warn('⚠️ Iframe not available to send game setup.');
     }
   };
 
   useEffect(() => {
     const receiveMessageFromGame = (event) => {
       if (event.origin !== 'https://learnifylevels.s3.us-east-1.amazonaws.com') {
-        console.warn('🚫 Blocked message from unknown origin:', event.origin);
+        console.warn('🚫 Ignored message from unknown origin:', event.origin);
         return;
       }
-
-      console.log('📩 Message received from game:', event.data);
 
       let parsedData = event.data;
       if (typeof parsedData === 'string') {
         try {
           parsedData = JSON.parse(parsedData);
         } catch (e) {
-          console.warn('❌ Could not parse JSON from game:', event.data);
+          console.warn('❌ Failed to parse message:', event.data);
           return;
         }
       }
 
       if (parsedData?.action === 'update' && parsedData?.loaded === 1) {
-        console.log('✅ Game is loaded.');
         setGameLoaded(true);
       }
     };
@@ -67,30 +68,67 @@ const MemoryGames = () => {
   }, []);
 
   return (
-    <div>
+    <div className="memory-container">
       <button className="back-button" onClick={handleBack}>
         <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
         Back
       </button>
 
-      <h1>MemoryGames Adventure for Child ID: {childId}</h1>
+      <div className="lemo-bubble">How hard do you want to compete?</div>
 
-      <p>Status: {gameLoaded ? '✅ Game Loaded' : '⏳ Waiting for Game to Load'}</p>
+      <div className="lemo-slider-container">
+        <iframe
+          src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/lemo_front/lemo_front.html?animation=point&scale=1"
+          width="160"
+          height="120"
+          className="logo-iframe"
+          title="Lemo Logo"
+          allowTransparency="true"
+        ></iframe>
 
-      <button onClick={handleSendGameSetup} disabled={!gameLoaded}>
+        <div className="slider-group">
+          <input
+            type="range"
+            min="0"
+            max={allowedValues.length - 1}
+            step="1"
+            value={allowedValues.indexOf(rows)}
+            onChange={(e) => {
+              const value = allowedValues[parseInt(e.target.value, 10)];
+              setRows(value);
+              setCols(value);
+            }}
+          />
+          <div className="slider-value">Selected: {rows}</div>
+        </div>
+      </div>
+
+      <p className="status-text">
+        Status: {gameLoaded ? <span className="loaded">✅ Game Loaded</span> : '⏳ Waiting for Game to Load'}
+      </p>
+
+      <button onClick={handleSendGameSetup} disabled={!gameLoaded} className="send-button">
         Send Game Setup to Game
       </button>
 
-      <div style={{ marginTop: '20px', height: '80vh' }}>
+      <div className="debug">
+        <p>
+          <strong>Rows:</strong> {rows}
+        </p>
+        <p>
+          <strong>Cols:</strong> {cols}
+        </p>
+        <p>
+          <strong>Child ID:</strong> {childId || 'default'}
+        </p>
+      </div>
+
+      <div className="game-frame-wrapper">
         <iframe
           ref={iframeRef}
           src={GAME_URL}
           title="Memory Game"
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-          }}
+          className="game-iframe"
         ></iframe>
       </div>
     </div>
