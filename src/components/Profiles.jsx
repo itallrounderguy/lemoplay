@@ -103,7 +103,7 @@ const Profile = ({
         <>
           <h3>Who's Learning?</h3>
           <iframe
-            src="https://learnify2025.s3.us-east-1.amazonaws.com/modalsanimation/front/pointdown.html"
+            src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/lemo_front/lemo_front.html?animation=pointdown&scale=1"
             width="220"
             height="140"
             className="pointdown-iframe"

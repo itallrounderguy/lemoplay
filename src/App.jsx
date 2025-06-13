@@ -9,7 +9,7 @@ import LanguageLearn from './pages/LanguageLearn';
 import MathLearn from './pages/MathLearn';
 import LogicLearn from './pages/LogicLearn';
 import MemoryGames from './pages/MemoryGames';
-import Preloader from './components/Preloader'; // ✅ Import preloader
+import Preloader from './components/Preloader'; // ✅ Preloader imported
 
 import './App.css';
 
@@ -39,10 +39,12 @@ const App = () => {
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
+      {/* ✅ Preloader mounted globally, outside routing logic */}
+      <Preloader />
+
       <div className="container">
         {isAuthPage && <Header />}
         {!isAuthPage && user && <GlobalMenu />}
-        {!isAuthPage && user && <Preloader />} {/* ✅ Background preload for logged-in users */}
 
         <Routes>
           <Route
@@ -99,7 +101,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

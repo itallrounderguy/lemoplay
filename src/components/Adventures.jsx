@@ -45,7 +45,6 @@ const Adventures = ({ childId }) => {
 
   return (
     <div className="adventures">
-      <h2>Choose an Adventure</h2>
       <div className="cards-grid">
         {cardsData.map((card) => (
           <div

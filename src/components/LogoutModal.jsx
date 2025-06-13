@@ -6,7 +6,7 @@ const LogoutModal = ({ onConfirm, onCancel }) => {
     <div className="logout-modal-overlay">
       <div className="logout-modal">
         <iframe
-          src="https://learnify2025.s3.us-east-1.amazonaws.com/modalsanimation/logout/logout.html"
+          src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/lemo_front/lemo_front.html?animation=wavehello&scale=1"
           width="200"
           height="120"
           className="logo-iframe"
