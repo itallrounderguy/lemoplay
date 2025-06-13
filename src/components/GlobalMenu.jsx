@@ -42,7 +42,7 @@ const GlobalMenu = () => {
 
       {showMenu && (
         <div className="mobile-menu">
-          <div className="menu-item" onClick={handlePlayersClick}>Players</div>
+          <div className="menu-item" onClick={handlePlayersClick}>Home</div>
           <div className="menu-item" onClick={handleLogoutClick}>Log Out</div>
         </div>
       )}

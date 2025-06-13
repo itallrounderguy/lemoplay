@@ -1,7 +1,7 @@
 import { useState, createContext, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
-import GlobalMenu from './components/GlobalMenu'; // ✅ Add global menu
+import GlobalMenu from './components/GlobalMenu';
 import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './components/Profiles';
@@ -9,6 +9,7 @@ import LanguageLearn from './pages/LanguageLearn';
 import MathLearn from './pages/MathLearn';
 import LogicLearn from './pages/LogicLearn';
 import MemoryGames from './pages/MemoryGames';
+import Preloader from './components/Preloader'; // ✅ Import preloader
 
 import './App.css';
 
@@ -40,7 +41,8 @@ const App = () => {
     <UserContext.Provider value={{ user, setUser }}>
       <div className="container">
         {isAuthPage && <Header />}
-        {!isAuthPage && user && <GlobalMenu />} {/* ✅ Global menu on all protected pages */}
+        {!isAuthPage && user && <GlobalMenu />}
+        {!isAuthPage && user && <Preloader />} {/* ✅ Background preload for logged-in users */}
 
         <Routes>
           <Route
