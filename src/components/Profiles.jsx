@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 import ChildForm from './ChildForm';
-import { Edit3, Trash2 } from 'lucide-react';
+import { Edit3, Trash2, RefreshCcw } from 'lucide-react';
 import './Profiles.css';
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
@@ -99,7 +99,20 @@ const Profile = ({
 
   return (
     <div className="child-section">
-      {!selectedChildId && <h3>Who's Learning?</h3>}
+      {!selectedChildId && (
+        <>
+          <h3>Who's Learning?</h3>
+          <iframe
+            src="https://learnify2025.s3.us-east-1.amazonaws.com/modalsanimation/front/pointdown.html"
+            width="220"
+            height="140"
+            className="pointdown-iframe"
+            title="pointdown"
+            scrolling="no"
+            allowTransparency="true"
+          ></iframe>
+        </>
+      )}
 
       <div className={`child-grid ${selectedChildId ? 'single-view' : ''}`}>
         {filteredChildren.map(child => (
@@ -129,6 +142,15 @@ const Profile = ({
                     e.stopPropagation();
                     handleDeleteChild(child.childId);
                   }}
+                />
+                <RefreshCcw
+                  size={18}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedChildId(null);
+                    setSelectedChildData(null);
+                  }}
+                  title="Switch Child"
                 />
               </div>
             )}
