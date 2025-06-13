@@ -3,6 +3,9 @@ import Profiles from '../components/Profiles';
 import Adventures from '../components/Adventures';
 import useSelectedChild from '../hooks/useSelectedChild';
 import './Dashboard.css';
+import '../components/Profiles.css'; // ✅ correct path
+
+
 
 const Dashboard = () => {
   const [resetSelectionFn, setResetSelectionFn] = useState(() => () => {});
@@ -26,9 +29,11 @@ const Dashboard = () => {
 
       {selectedChildId && selectedChildData && (
         <>
-          <p className="adventure-message">
-            Hello <strong>{selectedChildData.childName}</strong>, select your next adventure
-          </p>
+        
+            {/* ✅ Animated dialog bubble */}
+            <div className="lemo-bubble"> select your next adventure </div>
+            
+          
           <Adventures childId={selectedChildId} />
         </>
       )}

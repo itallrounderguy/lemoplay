@@ -6,15 +6,12 @@ const Preloader = () => {
     fetch('https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js');
     fetch('https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css');
 
-
-    /*
-    // Preload the logout animation iframe
-    const logoutIframe = document.createElement('iframe');
-    logoutIframe.src = 'https://learnify2025.s3.us-east-1.amazonaws.com/modalsanimation/logout/logout.html';
-    logoutIframe.style.display = 'none';
-    logoutIframe.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(logoutIframe);
-    */
+    // ✅ Preload the intro1 animation iframe
+    const introIframe = document.createElement('iframe');
+    introIframe.src = 'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/intro1/intro1.html';
+    introIframe.style.display = 'none';
+    introIframe.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(introIframe);
 
     // ✅ Preload the Lemo front animation iframe
     const lemoIframe = document.createElement('iframe');
@@ -24,12 +21,12 @@ const Preloader = () => {
     document.body.appendChild(lemoIframe);
 
     return () => {
-      document.body.removeChild(logoutIframe);
+      document.body.removeChild(introIframe);
       document.body.removeChild(lemoIframe);
     };
   }, []);
 
-  return <div>{/* You can add an optional spinner here */}</div>;
+  return <div>{/* Optional loading spinner here */}</div>;
 };
 
 export default Preloader;

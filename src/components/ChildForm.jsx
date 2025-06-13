@@ -71,7 +71,6 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           <div className="step-transition">
             <StepIndicator />
             <h2>What is your child’s name?</h2>
-            <p className="subtext">They’ll learn how to write it themselves</p>
             <input
               type="text"
               value={childName}

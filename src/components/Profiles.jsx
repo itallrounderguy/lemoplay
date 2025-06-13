@@ -100,19 +100,23 @@ const Profile = ({
   return (
     <div className="child-section">
       {!selectedChildId && (
-        <>
-          <h3>Who's Learning?</h3>
-          <iframe
-            src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/lemo_front/lemo_front.html?animation=pointdown&scale=1"
-            width="220"
-            height="140"
-            className="pointdown-iframe"
-            title="pointdown"
-            scrolling="no"
-            allowTransparency="true"
-          ></iframe>
-        </>
-      )}
+  <div className="lemo-intro">
+   
+    <iframe
+      src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/intro1/intro1.html"
+      width="220"
+      height="140"
+      className="intro1-iframe"
+      title="intro1"
+      allowTransparency="true"
+    ></iframe>
+
+    {/* ✅ Animated dialog bubble */}
+    <div className="lemo-bubble">
+      Hi! Add a child to begin, or select one you've already created.
+    </div>
+  </div>
+)}
 
       <div className={`child-grid ${selectedChildId ? 'single-view' : ''}`}>
         {filteredChildren.map(child => (
