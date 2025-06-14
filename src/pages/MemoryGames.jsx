@@ -77,7 +77,23 @@ const MemoryGames = () => {
       <div className="lemo-bubble">How hard do you want to compete?</div>
 
       <div className="lemo-slider-container">
-        <iframe
+  
+      <div className="slider-group">
+        <input
+          type="range"
+          min="0"
+          max={allowedValues.length - 1}
+          step="1"
+          value={allowedValues.indexOf(rows)}
+          onChange={(e) => {
+            const value = allowedValues[parseInt(e.target.value, 10)];
+            setRows(value);
+            setCols(value);
+          }}
+        />
+        <div className="slider-value">Selected: {rows}</div>
+
+      <iframe
           src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/lemo_front/lemo_front.html?animation=point&scale=1"
           width="160"
           height="120"
@@ -85,23 +101,9 @@ const MemoryGames = () => {
           title="Lemo Logo"
           allowTransparency="true"
         ></iframe>
-
-        <div className="slider-group">
-          <input
-            type="range"
-            min="0"
-            max={allowedValues.length - 1}
-            step="1"
-            value={allowedValues.indexOf(rows)}
-            onChange={(e) => {
-              const value = allowedValues[parseInt(e.target.value, 10)];
-              setRows(value);
-              setCols(value);
-            }}
-          />
-          <div className="slider-value">Selected: {rows}</div>
         </div>
       </div>
+
 
       <p className="status-text">
         Status: {gameLoaded ? <span className="loaded">✅ Game Loaded</span> : '⏳ Waiting for Game to Load'}

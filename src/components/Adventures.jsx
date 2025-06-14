@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Adventures.css'; // Create this for styling
+import '../components/bubble.css'; // ✅ correct path
 
 const cardsData = [
   {
