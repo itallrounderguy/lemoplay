@@ -11,10 +11,8 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  margin-top: 20px;
   height: 80vh;
+  margin-top: 20px;
 }
 
 .game-iframe {
@@ -35,11 +33,12 @@
 
 .lemo-slider-container {
   display: flex;
-  flex-direction: column; /* ✅ stack vertically */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   margin: 2rem auto;
+  width: 100%;
 }
 
 .slider-group {
@@ -47,11 +46,13 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding: 0 1rem;
 }
 
-/* ✅ Slider - Cross-browser consistent styling */
+/* ✅ Responsive Slider Styling */
 .slider-group input[type='range'] {
-  width: 220px;
+  width: 90%;
+  max-width: 400px;
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
@@ -66,7 +67,7 @@
   border-radius: 50%;
   background: #4caf50;
   cursor: pointer;
-  margin-top: -8px; /* ✅ Aligns thumb with track */
+  margin-top: -8px;
   border: 2px solid #fff;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 }
@@ -131,4 +132,8 @@
   margin: 1rem auto;
   width: fit-content;
   border-radius: 8px;
+}
+
+.play-button-wrapper {
+  display: inline-block;
 }

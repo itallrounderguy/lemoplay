@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import useSelectedChild from '../hooks/useSelectedChild';
 import '../components/bubble.css';
-import './MemoryGames.css'; // ✅ Custom styles
+import './MemoryGames.css';
 
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
 const allowedValues = [4, 6, 8, 10, 12, 14, 16, 18, 20];
@@ -22,7 +22,7 @@ const MemoryGames = () => {
 
   const handleBack = () => navigate('/dashboard');
 
-  const handleSendGameSetup = () => {
+  const sendGameSetup = () => {
     const configMessage = {
       action: 'setup',
       payload: {
@@ -38,6 +38,12 @@ const MemoryGames = () => {
         'https://learnifylevels.s3.us-east-1.amazonaws.com'
       );
       console.log('✅ Game setup message sent:', configMessage);
+    }
+  };
+
+  const handlePlayClick = () => {
+    if (gameLoaded) {
+      sendGameSetup();
     }
   };
 
@@ -77,52 +83,47 @@ const MemoryGames = () => {
       <div className="lemo-bubble">How many cards to play with?</div>
 
       <div className="lemo-slider-container">
-  
-      <div className="slider-group">
-        <input
-          type="range"
-          min="0"
-          max={allowedValues.length - 1}
-          step="1"
-          value={allowedValues.indexOf(rows)}
-          onChange={(e) => {
-            const value = allowedValues[parseInt(e.target.value, 10)];
-            setRows(value);
-            setCols(value);
-          }}
-        />
-        <div className="slider-value">Selected: {rows}</div>
+        <div className="slider-group">
+          <input
+            type="range"
+            min="0"
+            max={allowedValues.length - 1}
+            step="1"
+            value={allowedValues.indexOf(rows)}
+            onChange={(e) => {
+              const value = allowedValues[parseInt(e.target.value, 10)];
+              setRows(value);
+              setCols(value);
+            }}
+          />
+          <div className="slider-value">Selected: {rows}</div>
 
-      <iframe
-          src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=idle&scale=1.2"
-          width="200"
-          height="160"
-          className="logo-iframe"
-          title="play"
-          allowTransparency="true"
-        ></iframe>
+          <div
+            className="play-button-wrapper"
+            onClick={handlePlayClick}
+            style={{
+              cursor: gameLoaded ? 'pointer' : 'not-allowed',
+              opacity: gameLoaded ? 1 : 0.5,
+              pointerEvents: gameLoaded ? 'auto' : 'none',
+            }}
+          >
+            <iframe
+              src={`https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=${gameLoaded ? 'idle' : 'wait'}&scale=1.2`}
+              width="200"
+              height="160"
+              className="logo-iframe"
+              title="play"
+              allowTransparency="true"
+              style={{ pointerEvents: 'none' }} // Makes iframe visually interactive but click goes to wrapper
+            ></iframe>
+          </div>
         </div>
       </div>
 
-
-      <p className="status-text">
-        Status: {gameLoaded ? <span className="loaded">✅ Game Loaded</span> : '⏳ Waiting for Game to Load'}
-      </p>
-
-      <button onClick={handleSendGameSetup} disabled={!gameLoaded} className="send-button">
-        Send Game Setup to Game
-      </button>
-
       <div className="debug">
-        <p>
-          <strong>Rows:</strong> {rows}
-        </p>
-        <p>
-          <strong>Cols:</strong> {cols}
-        </p>
-        <p>
-          <strong>Child ID:</strong> {childId || 'default'}
-        </p>
+        <p><strong>Rows:</strong> {rows}</p>
+        <p><strong>Cols:</strong> {cols}</p>
+        <p><strong>Child ID:</strong> {childId || 'default'}</p>
       </div>
 
       <div className="game-frame-wrapper">
