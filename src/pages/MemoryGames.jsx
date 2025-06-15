@@ -6,19 +6,28 @@ import '../components/bubble.css';
 import './MemoryGames.css';
 
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
+const GAME_ORIGIN = new URL(GAME_URL).origin;
+
+const ANIMATION_IFRAME_URL = 'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=wait&scale=1.2';
+const ANIMATION_ORIGIN = 'https://learnify2025.s3.us-east-1.amazonaws.com';
+
 const allowedValues = [4, 6, 8, 10, 12, 14, 16, 18, 20];
 
 const MemoryGames = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedChildId } = useSelectedChild();
-  const iframeRef = useRef(null);
+
+  const gameIframeRef = useRef(null);
+  const animIframeRef = useRef(null);
 
   const [gameLoaded, setGameLoaded] = useState(false);
   const [rows, setRows] = useState(4);
   const [cols, setCols] = useState(4);
 
-  const childId = location.state?.childId || selectedChildId;
+  // Ensure fallback to "default" only at message time
+  const rawChildId = location.state?.childId || selectedChildId;
+  const childId = rawChildId || 'default';
 
   const handleBack = () => navigate('/dashboard');
 
@@ -28,16 +37,18 @@ const MemoryGames = () => {
       payload: {
         rows,
         cols,
-        childId: childId || 'default',
+        childId,
       },
     };
 
-    if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(
+    if (gameIframeRef.current?.contentWindow) {
+      gameIframeRef.current.contentWindow.postMessage(
         configMessage,
-        'https://learnifylevels.s3.us-east-1.amazonaws.com'
+        GAME_ORIGIN
       );
       console.log('✅ Game setup message sent:', configMessage);
+    } else {
+      console.warn('❌ gameIframeRef is not ready');
     }
   };
 
@@ -47,9 +58,18 @@ const MemoryGames = () => {
     }
   };
 
+  const switchAnimation = (animationName) => {
+    if (animIframeRef.current?.contentWindow) {
+      animIframeRef.current.contentWindow.postMessage(
+        { action: 'changeAnimation', animation: animationName },
+        ANIMATION_ORIGIN
+      );
+    }
+  };
+
   useEffect(() => {
     const receiveMessageFromGame = (event) => {
-      if (event.origin !== 'https://learnifylevels.s3.us-east-1.amazonaws.com') {
+      if (event.origin !== GAME_ORIGIN) {
         console.warn('🚫 Ignored message from unknown origin:', event.origin);
         return;
       }
@@ -66,6 +86,7 @@ const MemoryGames = () => {
 
       if (parsedData?.action === 'update' && parsedData?.loaded === 1) {
         setGameLoaded(true);
+        switchAnimation('idle'); // Only switch once game is ready
       }
     };
 
@@ -108,13 +129,14 @@ const MemoryGames = () => {
             }}
           >
             <iframe
-              src={`https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=${gameLoaded ? 'idle' : 'wait'}&scale=1.2`}
+              ref={animIframeRef}
+              src={ANIMATION_IFRAME_URL}
               width="200"
               height="160"
               className="logo-iframe"
               title="play"
               allowTransparency="true"
-              style={{ pointerEvents: 'none' }} // Makes iframe visually interactive but click goes to wrapper
+              style={{ pointerEvents: 'none' }}
             ></iframe>
           </div>
         </div>
@@ -123,12 +145,12 @@ const MemoryGames = () => {
       <div className="debug">
         <p><strong>Rows:</strong> {rows}</p>
         <p><strong>Cols:</strong> {cols}</p>
-        <p><strong>Child ID:</strong> {childId || 'default'}</p>
+        <p><strong>Child ID:</strong> {childId}</p>
       </div>
 
       <div className="game-frame-wrapper">
         <iframe
-          ref={iframeRef}
+          ref={gameIframeRef}
           src={GAME_URL}
           title="Memory Game"
           className="game-iframe"
