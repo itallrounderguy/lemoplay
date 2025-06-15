@@ -74,7 +74,7 @@ const MemoryGames = () => {
         Back
       </button>
 
-      <div className="lemo-bubble">How hard do you want to compete?</div>
+      <div className="lemo-bubble">How many cards to play with?</div>
 
       <div className="lemo-slider-container">
   
@@ -94,11 +94,11 @@ const MemoryGames = () => {
         <div className="slider-value">Selected: {rows}</div>
 
       <iframe
-          src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/lemo_front/lemo_front.html?animation=point&scale=1"
-          width="160"
-          height="120"
+          src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=idle&scale=1.2"
+          width="200"
+          height="160"
           className="logo-iframe"
-          title="Lemo Logo"
+          title="play"
           allowTransparency="true"
         ></iframe>
         </div>

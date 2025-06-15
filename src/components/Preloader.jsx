@@ -20,9 +20,19 @@ const Preloader = () => {
     lemoIframe.setAttribute('aria-hidden', 'true');
     document.body.appendChild(lemoIframe);
 
+     // ✅ Preload the Lemo playbuttun animation iframe
+    const playbuttunframe = document.createElement('iframe');
+    playbuttunframe.src = 'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=idle&scale=1.2';
+    playbuttunframe.style.display = 'none';
+    playbuttunframe.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(playbuttunframe);
+
+""
+
     return () => {
       document.body.removeChild(introIframe);
       document.body.removeChild(lemoIframe);
+      document.body.removeChild(playbuttunframe);
     };
   }, []);
 

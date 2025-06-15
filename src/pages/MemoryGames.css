@@ -13,6 +13,8 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  margin-top: 20px;
+  height: 80vh;
 }
 
 .game-iframe {
@@ -20,7 +22,6 @@
   width: 100%;
   border: none;
 }
-
 
 .lemo-bubble {
   display: inline-block;
@@ -38,14 +39,58 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin: 2rem auto; /* ✅ center and add spacing */
+  margin: 2rem auto;
 }
 
-.slider-group input[type='range'] {
-  width: 220px;
+.slider-group {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+}
+
+/* ✅ Slider - Cross-browser consistent styling */
+.slider-group input[type='range'] {
+  width: 220px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  margin: 1rem 0;
+}
+
+/* Chrome / Safari */
+.slider-group input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #4caf50;
+  cursor: pointer;
+  margin-top: -8px; /* ✅ Aligns thumb with track */
+  border: 2px solid #fff;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+
+.slider-group input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #ccc;
+  border-radius: 4px;
+}
+
+/* Firefox */
+.slider-group input[type='range']::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #4caf50;
+  border: none;
+  cursor: pointer;
+}
+
+.slider-group input[type='range']::-moz-range-track {
+  height: 6px;
+  background: #ccc;
+  border-radius: 4px;
 }
 
 .slider-value {
@@ -87,9 +132,3 @@
   width: fit-content;
   border-radius: 8px;
 }
-
-.game-frame-wrapper {
-  margin-top: 20px;
-  height: 80vh;
-}
-
