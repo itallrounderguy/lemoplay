@@ -8,7 +8,8 @@ import './MemoryGames.css';
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
 const GAME_ORIGIN = new URL(GAME_URL).origin;
 
-const ANIMATION_IFRAME_URL = 'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=wait&scale=1.2';
+const ANIMATION_IFRAME_URL =
+  'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=wait&scale=1.2';
 const ANIMATION_ORIGIN = 'https://learnify2025.s3.us-east-1.amazonaws.com';
 
 const allowedValues = [4, 6, 8, 10, 12, 14, 16, 18, 20];
@@ -22,7 +23,7 @@ const MemoryGames = () => {
   const animIframeRef = useRef(null);
 
   const [gameLoaded, setGameLoaded] = useState(false);
-  const [gameVisible, setGameVisible] = useState(false);
+  const [showGame, setShowGame] = useState(false);
   const [rows, setRows] = useState(4);
   const [cols, setCols] = useState(4);
 
@@ -30,6 +31,8 @@ const MemoryGames = () => {
   const childId = rawChildId || 'default';
 
   const handleBack = () => navigate('/dashboard');
+
+  const handleFullscreenBack = () => setShowGame(false);
 
   const sendGameSetup = () => {
     const configMessage = {
@@ -42,10 +45,7 @@ const MemoryGames = () => {
     };
 
     if (gameIframeRef.current?.contentWindow) {
-      gameIframeRef.current.contentWindow.postMessage(
-        configMessage,
-        GAME_ORIGIN
-      );
+      gameIframeRef.current.contentWindow.postMessage(configMessage, GAME_ORIGIN);
       console.log('✅ Game setup message sent:', configMessage);
     }
   };
@@ -53,7 +53,7 @@ const MemoryGames = () => {
   const handlePlayClick = () => {
     if (gameLoaded) {
       sendGameSetup();
-      setGameVisible(true);
+      setShowGame(true);
     }
   };
 
@@ -77,7 +77,7 @@ const MemoryGames = () => {
       if (typeof parsedData === 'string') {
         try {
           parsedData = JSON.parse(parsedData);
-        } catch (e) {
+        } catch {
           console.warn('❌ Failed to parse message:', event.data);
           return;
         }
@@ -89,8 +89,18 @@ const MemoryGames = () => {
       }
     };
 
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowGame(false);
+      }
+    };
+
     window.addEventListener('message', receiveMessageFromGame);
-    return () => window.removeEventListener('message', receiveMessageFromGame);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('message', receiveMessageFromGame);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
@@ -130,8 +140,8 @@ const MemoryGames = () => {
             <iframe
               ref={animIframeRef}
               src={ANIMATION_IFRAME_URL}
-              width="200"
-              height="160"
+              width="240"
+              height="200"
               className="logo-iframe"
               title="play"
               allowTransparency="true"
@@ -141,24 +151,19 @@ const MemoryGames = () => {
         </div>
       </div>
 
-      <div className="debug">
-        <p><strong>Rows:</strong> {rows}</p>
-        <p><strong>Cols:</strong> {cols}</p>
-        <p><strong>Child ID:</strong> {childId}</p>
+     
+      {/* Game iframe always mounted, just conditionally shown */}
+      <div className={`fullscreen-game-wrapper ${showGame ? 'visible' : 'hidden'}`}>
+        <button className="fullscreen-back-button" onClick={handleFullscreenBack}>
+          <ArrowLeft size={20} /> Back to Setup
+        </button>
+        <iframe
+          ref={gameIframeRef}
+          src={GAME_URL}
+          title="Memory Game"
+          className="fullscreen-game"
+        ></iframe>
       </div>
-
-      {/* Always render iframe, but control visibility */}
-      <div
-      className={`game-frame-wrapper ${gameVisible ? 'fade-in' : ''}`}
-      style={{ display: gameVisible ? 'flex' : 'none' }}
-    >
-      <iframe
-        ref={gameIframeRef}
-        src={GAME_URL}
-        title="Memory Game"
-        className="game-iframe"
-      ></iframe>
-    </div>
     </div>
   );
 };
