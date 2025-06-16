@@ -22,10 +22,10 @@ const MemoryGames = () => {
   const animIframeRef = useRef(null);
 
   const [gameLoaded, setGameLoaded] = useState(false);
+  const [gameVisible, setGameVisible] = useState(false);
   const [rows, setRows] = useState(4);
   const [cols, setCols] = useState(4);
 
-  // Ensure fallback to "default" only at message time
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
 
@@ -47,14 +47,13 @@ const MemoryGames = () => {
         GAME_ORIGIN
       );
       console.log('✅ Game setup message sent:', configMessage);
-    } else {
-      console.warn('❌ gameIframeRef is not ready');
     }
   };
 
   const handlePlayClick = () => {
     if (gameLoaded) {
       sendGameSetup();
+      setGameVisible(true);
     }
   };
 
@@ -86,7 +85,7 @@ const MemoryGames = () => {
 
       if (parsedData?.action === 'update' && parsedData?.loaded === 1) {
         setGameLoaded(true);
-        switchAnimation('idle'); // Only switch once game is ready
+        switchAnimation('idle');
       }
     };
 
@@ -148,14 +147,18 @@ const MemoryGames = () => {
         <p><strong>Child ID:</strong> {childId}</p>
       </div>
 
-      <div className="game-frame-wrapper">
-        <iframe
-          ref={gameIframeRef}
-          src={GAME_URL}
-          title="Memory Game"
-          className="game-iframe"
-        ></iframe>
-      </div>
+      {/* Always render iframe, but control visibility */}
+      <div
+      className={`game-frame-wrapper ${gameVisible ? 'fade-in' : ''}`}
+      style={{ display: gameVisible ? 'flex' : 'none' }}
+    >
+      <iframe
+        ref={gameIframeRef}
+        src={GAME_URL}
+        title="Memory Game"
+        className="game-iframe"
+      ></iframe>
+    </div>
     </div>
   );
 };
