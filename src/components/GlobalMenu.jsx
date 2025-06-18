@@ -1,9 +1,9 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu } from 'lucide-react';
 import { UserContext } from '../App';
 import LogoutModal from './LogoutModal'; // ✅ import the modal
 import './GlobalMenu.css';
+import { Menu, ArrowLeft } from 'lucide-react';
 
 const GlobalMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -41,11 +41,16 @@ const GlobalMenu = () => {
       </button>
 
       {showMenu && (
-        <div className="mobile-menu">
-          <div className="menu-item" onClick={handlePlayersClick}>Home</div>
-          <div className="menu-item" onClick={handleLogoutClick}>Log Out</div>
+      <div className="mobile-menu">
+        <div className="menu-item" onClick={() => navigate(-1)}>
+          <ArrowLeft size={16} style={{ marginRight: '8px' }} />
+          Back
         </div>
-      )}
+        <div className="menu-item" onClick={handlePlayersClick}>Home</div>
+        <div className="menu-item" onClick={handleLogoutClick}>Log Out</div>
+      </div>
+    )}
+
 
       {showLogoutModal && (
         <LogoutModal
