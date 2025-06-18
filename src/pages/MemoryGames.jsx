@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
 import useSelectedChild from '../hooks/useSelectedChild';
 import '../components/bubble.css';
 import GlobalMenu from '../components/GlobalMenu';
@@ -13,7 +12,14 @@ const ANIMATION_IFRAME_URL =
   'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=wait&scale=1.2';
 const ANIMATION_ORIGIN = 'https://learnify2025.s3.us-east-1.amazonaws.com';
 
-const allowedValues = [4, 6, 8, 10, 12, 14, 16, 18, 20];
+// 🎮 Difficulty levels with emojis
+const difficultyLevels = [
+  { label: '🐣 Baby', rows: 2, cols: 2 },
+  { label: '🧒 Learner', rows: 2, cols: 3 },
+  { label: '🧠 Smart', rows: 2, cols: 4 },
+  { label: '🤯 Genius', rows: 3, cols: 4 },
+  { label: '👽 Alien', rows: 4, cols: 4 },
+];
 
 const MemoryGames = () => {
   const location = useLocation();
@@ -25,24 +31,20 @@ const MemoryGames = () => {
 
   const [gameLoaded, setGameLoaded] = useState(false);
   const [showGame, setShowGame] = useState(false);
-  const [rows, setRows] = useState(4);
-  const [cols, setCols] = useState(4);
+  const [levelIndex, setLevelIndex] = useState(0);
+
+  const { rows, cols, label } = { ...difficultyLevels[levelIndex] };
 
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
 
   const handleBack = () => navigate('/dashboard');
-
   const handleFullscreenBack = () => setShowGame(false);
 
   const sendGameSetup = () => {
     const configMessage = {
       action: 'setup',
-      payload: {
-        rows,
-        cols,
-        childId,
-      },
+      payload: { rows, cols, childId },
     };
 
     if (gameIframeRef.current?.contentWindow) {
@@ -69,17 +71,13 @@ const MemoryGames = () => {
 
   useEffect(() => {
     const receiveMessageFromGame = (event) => {
-      if (event.origin !== GAME_ORIGIN) {
-        console.warn('🚫 Ignored message from unknown origin:', event.origin);
-        return;
-      }
+      if (event.origin !== GAME_ORIGIN) return;
 
       let parsedData = event.data;
       if (typeof parsedData === 'string') {
         try {
           parsedData = JSON.parse(parsedData);
         } catch {
-          console.warn('❌ Failed to parse message:', event.data);
           return;
         }
       }
@@ -91,9 +89,7 @@ const MemoryGames = () => {
     };
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setShowGame(false);
-      }
+      if (e.key === 'Escape') setShowGame(false);
     };
 
     window.addEventListener('message', receiveMessageFromGame);
@@ -106,25 +102,35 @@ const MemoryGames = () => {
 
   return (
     <div className="memory-container">
-     <GlobalMenu />
+      <GlobalMenu />
 
-      <div className="lemo-bubble">How many cards to play with?</div>
+      <div className="lemo-bubble">Choose difficulty:</div>
 
       <div className="lemo-slider-container">
         <div className="slider-group">
-          <input
-            type="range"
-            min="0"
-            max={allowedValues.length - 1}
-            step="1"
-            value={allowedValues.indexOf(rows)}
-            onChange={(e) => {
-              const value = allowedValues[parseInt(e.target.value, 10)];
-              setRows(value);
-              setCols(value);
-            }}
-          />
-          <div className="slider-value">Selected: {rows}</div>
+          <div className="slider-wrapper">
+            <input
+              type="range"
+              min="0"
+              max={difficultyLevels.length - 1}
+              step="1"
+              value={levelIndex}
+              onChange={(e) => setLevelIndex(parseInt(e.target.value, 10))}
+              aria-label="Difficulty Level"
+            />
+
+            <div className="slider-labels">
+              {difficultyLevels.map((level, index) => (
+                <span
+                  key={index}
+                  className={`slider-label ${index === levelIndex ? 'active' : ''}`}
+                  style={{ left: `${(index / (difficultyLevels.length - 1)) * 100}%` }}
+                >
+                  {level.label}
+                </span>
+              ))}
+            </div>
+          </div>
 
           <div
             className="play-button-wrapper"
@@ -149,13 +155,11 @@ const MemoryGames = () => {
         </div>
       </div>
 
-     
-      {/* Game iframe always mounted, just conditionally shown */}
+      {/* Game iframe */}
       <div className={`fullscreen-game-wrapper ${showGame ? 'visible' : 'hidden'}`}>
-      
-       <div className="fullscreen-menu">
-         <GlobalMenu />
-       </div>
+        <div className="fullscreen-menu">
+          <GlobalMenu />
+        </div>
 
         <iframe
           ref={gameIframeRef}

@@ -14,15 +14,6 @@
   box-sizing: border-box;
 }
 
-/* === Root Container === */
-/*
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
-}
-*/
 
 /* === Body === */
 body {
@@ -40,17 +31,6 @@ body, h1, h2, h3, h4, h5, h6, p {
   color: black;
 }
 
-
-/* === Container === */
-/*
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 0;
-}
-*/
 
 /* === Header === */
 .header {

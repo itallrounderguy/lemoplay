@@ -193,3 +193,33 @@
   visibility: visible;
   animation: fadeIn 0.6s ease-in-out forwards;
 }
+
+.slider-wrapper {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+}
+
+.slider-labels {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  pointer-events: none;
+}
+
+.slider-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+}
+
+.slider-label.active {
+  font-weight: bold;
+  color: #000;
+  font-size: 1rem;
+}
