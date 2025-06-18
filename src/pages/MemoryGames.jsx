@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import useSelectedChild from '../hooks/useSelectedChild';
 import '../components/bubble.css';
+import GlobalMenu from '../components/GlobalMenu';
 import './MemoryGames.css';
 
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
@@ -105,10 +106,7 @@ const MemoryGames = () => {
 
   return (
     <div className="memory-container">
-      <button className="back-button" onClick={handleBack}>
-        <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
-        Back
-      </button>
+     <GlobalMenu />
 
       <div className="lemo-bubble">How many cards to play with?</div>
 
@@ -140,8 +138,8 @@ const MemoryGames = () => {
             <iframe
               ref={animIframeRef}
               src={ANIMATION_IFRAME_URL}
-              width="240"
-              height="200"
+              width="280"
+              height="240"
               className="logo-iframe"
               title="play"
               allowTransparency="true"
@@ -154,9 +152,11 @@ const MemoryGames = () => {
      
       {/* Game iframe always mounted, just conditionally shown */}
       <div className={`fullscreen-game-wrapper ${showGame ? 'visible' : 'hidden'}`}>
-        <button className="fullscreen-back-button" onClick={handleFullscreenBack}>
-          <ArrowLeft size={20} /> Back to Setup
-        </button>
+      
+       <div className="fullscreen-menu">
+         <GlobalMenu />
+       </div>
+
         <iframe
           ref={gameIframeRef}
           src={GAME_URL}

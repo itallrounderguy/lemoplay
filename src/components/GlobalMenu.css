@@ -9,7 +9,7 @@
   padding: 8px 12px;
   font-size: 1rem;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 2000; /* Higher than game */
 }
 
 .mobile-menu {
@@ -20,7 +20,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   padding: 0.5rem;
-  z-index: 100;
+   z-index: 2000; /* Higher than game */
 }
 
 .menu-item {
