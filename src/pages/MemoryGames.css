@@ -32,13 +32,19 @@
 }
 
 .lemo-slider-container {
+  flex-grow: 1;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  margin: 2rem auto;
-  width: 100%;
+  padding-bottom: 2rem;
+}
+
+.slider-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 50%;
 }
 
 .slider-group {
@@ -46,13 +52,13 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 0 1rem;
+  margin-bottom: 5rem; /* or your preferred spacing */
 }
 
 /* ✅ Responsive Slider Styling */
 .slider-group input[type='range'] {
-  width: 90%;
-  max-width: 400px;
+  width: 100%;
+  max-width: 900px; /* 50% more than your previous 600px */
   appearance: none;
   background: transparent;
   margin: 1rem 0;
@@ -196,9 +202,12 @@
 
 .slider-wrapper {
   position: relative;
-  width: 90%;
-  max-width: 400px;
+  width: 100%;
+  max-width: none;
+  display: flex;
+  justify-content: center;
 }
+
 
 .slider-labels {
   position: absolute;
@@ -222,4 +231,26 @@
   font-weight: bold;
   color: #000;
   font-size: 1rem;
+}
+
+.back-button-container {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+}
+
+.back-button {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

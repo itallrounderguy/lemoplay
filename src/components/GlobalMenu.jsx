@@ -42,10 +42,6 @@ const GlobalMenu = () => {
 
       {showMenu && (
       <div className="mobile-menu">
-        <div className="menu-item" onClick={() => navigate(-1)}>
-          <ArrowLeft size={16} style={{ marginRight: '8px' }} />
-          Back
-        </div>
         <div className="menu-item" onClick={handlePlayersClick}>Home</div>
         <div className="menu-item" onClick={handleLogoutClick}>Log Out</div>
       </div>

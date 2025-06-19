@@ -12,7 +12,6 @@ const ANIMATION_IFRAME_URL =
   'https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/playbuttun/lemo_playbuttun.html?animation=wait&scale=1.2';
 const ANIMATION_ORIGIN = 'https://learnify2025.s3.us-east-1.amazonaws.com';
 
-// 🎮 Difficulty levels with emojis
 const difficultyLevels = [
   { label: '🐣 Baby', rows: 2, cols: 2 },
   { label: '🧒 Learner', rows: 2, cols: 3 },
@@ -33,20 +32,27 @@ const MemoryGames = () => {
   const [showGame, setShowGame] = useState(false);
   const [levelIndex, setLevelIndex] = useState(0);
 
-  const { rows, cols, label } = { ...difficultyLevels[levelIndex] };
-
+  const { rows, cols } = { ...difficultyLevels[levelIndex] };
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
 
-  const handleBack = () => navigate('/dashboard');
-  const handleFullscreenBack = () => setShowGame(false);
+  const handleFullscreenBack = () => {
+    if (gameIframeRef.current?.contentWindow) {
+      const resetMessage = {
+        action: 'setup',
+        payload: { rows: 0, cols: 0, childId },
+      };
+      gameIframeRef.current.contentWindow.postMessage(resetMessage, GAME_ORIGIN);
+      console.log('🔄 Reset message sent:', resetMessage);
+    }
+    setShowGame(false);
+  };
 
   const sendGameSetup = () => {
     const configMessage = {
       action: 'setup',
       payload: { rows, cols, childId },
     };
-
     if (gameIframeRef.current?.contentWindow) {
       gameIframeRef.current.contentWindow.postMessage(configMessage, GAME_ORIGIN);
       console.log('✅ Game setup message sent:', configMessage);
@@ -107,28 +113,29 @@ const MemoryGames = () => {
       <div className="lemo-bubble">Choose difficulty:</div>
 
       <div className="lemo-slider-container">
-        <div className="slider-group">
-          <div className="slider-wrapper">
-            <input
-              type="range"
-              min="0"
-              max={difficultyLevels.length - 1}
-              step="1"
-              value={levelIndex}
-              onChange={(e) => setLevelIndex(parseInt(e.target.value, 10))}
-              aria-label="Difficulty Level"
-            />
-
-            <div className="slider-labels">
-              {difficultyLevels.map((level, index) => (
-                <span
-                  key={index}
-                  className={`slider-label ${index === levelIndex ? 'active' : ''}`}
-                  style={{ left: `${(index / (difficultyLevels.length - 1)) * 100}%` }}
-                >
-                  {level.label}
-                </span>
-              ))}
+        <div className="slider-section">
+          <div className="slider-group">
+            <div className="slider-wrapper">
+              <input
+                type="range"
+                min="0"
+                max={difficultyLevels.length - 1}
+                step="1"
+                value={levelIndex}
+                onChange={(e) => setLevelIndex(parseInt(e.target.value, 10))}
+                aria-label="Difficulty Level"
+              />
+              <div className="slider-labels">
+                {difficultyLevels.map((level, index) => (
+                  <span
+                    key={index}
+                    className={`slider-label ${index === levelIndex ? 'active' : ''}`}
+                    style={{ left: `${(index / (difficultyLevels.length - 1)) * 100}%` }}
+                  >
+                    {level.label}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -155,10 +162,11 @@ const MemoryGames = () => {
         </div>
       </div>
 
-      {/* Game iframe */}
       <div className={`fullscreen-game-wrapper ${showGame ? 'visible' : 'hidden'}`}>
-        <div className="fullscreen-menu">
-          <GlobalMenu />
+        <div className="fullscreen-menu back-button-container">
+          <button className="back-button" onClick={handleFullscreenBack} aria-label="Go back">
+            ←
+          </button>
         </div>
 
         <iframe
