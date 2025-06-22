@@ -22,7 +22,7 @@ const Profile = ({
   const [editingChild, setEditingChild] = useState(null);
 
   const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('language') || 'off';
+  return localStorage.getItem('language') || 'no';
   });
   const [showLangMenu, setShowLangMenu] = useState(false);
 
@@ -103,15 +103,42 @@ const Profile = ({
     }
   };
 
-  const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-    if (lang === 'off') {
-      localStorage.removeItem('language');
+  const handleLanguageChange = async (lang) => {
+  setLanguage(lang);
+  setShowLangMenu(false);
+
+    if (lang === 'no') {
+    localStorage.setItem('language', 'no');
     } else {
-      localStorage.setItem('language', lang);
+    localStorage.setItem('language', lang);
     }
-    setShowLangMenu(false);
-  };
+
+  // ✅ Also update the selected child's language in DB
+  if (selectedChildId) {
+    const selectedChild = children.find(c => c.childId === selectedChildId);
+    if (selectedChild) {
+      try {
+        await fetch(`${CHILDREN_API}/${user.sub}/child/${selectedChildId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-id': user.sub,
+          },
+          body: JSON.stringify({
+          ...selectedChild,
+          language: lang,
+        }),
+
+        });
+        console.log('✅ Language updated in DB:', lang);
+        await refreshChildren(); // Optional but ensures UI freshness
+      } catch (err) {
+        console.error('❌ Failed to update child language:', err);
+      }
+    }
+  }
+};
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -148,6 +175,14 @@ const Profile = ({
               if (!selectedChildId) {
                 setSelectedChildId(child.childId);
                 setSelectedChildData(child);
+                // ✅ Sync language from DB to localStorage
+                if (child.language) {
+                  localStorage.setItem('language', child.language);
+                  setLanguage(child.language);
+                } else {
+                  localStorage.removeItem('language');
+                  setLanguage('off');
+                }
               }
             }}
           >
@@ -178,21 +213,35 @@ const Profile = ({
                   title="Switch Child"
                 />
                 <div className="language-toggle-wrapper" onClick={(e) => e.stopPropagation()}>
-                  {language === 'off' ? (
-                    <VolumeX
-                      size={18}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => setShowLangMenu(!showLangMenu)}
-                      title="Select Language"
-                    />
-                  ) : (
-                    <Volume2
-                      size={18}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => setShowLangMenu(!showLangMenu)}
-                      title={`Current: ${language === 'en' ? 'English' : 'Arabic'}`}
-                    />
-                  )}
+                  {(language === 'en' || language === 'ar') ? (
+                      <Flag
+                        code={language === 'en' ? 'us' : 'sa'}
+                        style={{ width: '28px', height: '18px', cursor: 'pointer', borderRadius: '3px' }}
+                        title={language === 'en' ? 'English' : 'Arabic'}
+                        onClick={() => setShowLangMenu(!showLangMenu)}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: '28px',
+                          height: '18px',
+                          backgroundColor: '#eee',
+                          color: '#888',
+                          fontSize: '12px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          border: '1px solid #ccc',
+                          cursor: 'pointer',
+                          borderRadius: '3px',
+                        }}
+                        title="No Language"
+                        onClick={() => setShowLangMenu(!showLangMenu)}
+                      >
+                        ❌
+                      </div>
+                    )}
+
                   {showLangMenu && (
                     <div className="language-menu">
                       <Flag

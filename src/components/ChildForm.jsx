@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './ChildForm.css';
+import Flag from 'react-world-flags';
 
 const avatars = [
   'Lion', 'Tiger', 'Cat', 'Dog', 'Fox',
@@ -10,11 +11,11 @@ const avatars = [
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const isEditing = !!existingChild;
 
-  // 1. Initialize state from existingChild if present
   const [step, setStep] = useState(1);
   const [childName, setChildName] = useState(existingChild?.childName || '');
   const [childAge, setChildAge] = useState(existingChild?.childAge?.toString() || '');
   const [avatar, setAvatar] = useState(existingChild?.avatar || 'Lion');
+  const [language, setLanguage] = useState(existingChild?.language || 'en');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -35,13 +36,14 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           childName,
           childAge: parseInt(childAge, 10),
           avatar,
+          language, // ✅ Send selected language to backend
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        onSuccess(); // Refresh + close
+        onSuccess();
         onClose();
       } else {
         alert((isEditing ? 'Update' : 'Add') + ' failed: ' + data.message);
@@ -59,6 +61,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
       <div className={`step-dot ${step === 1 ? 'active' : ''}`} />
       <div className={`step-dot ${step === 2 ? 'active' : ''}`} />
       <div className={`step-dot ${step === 3 ? 'active' : ''}`} />
+      <div className={`step-dot ${step === 4 ? 'active' : ''}`} />
     </div>
   );
 
@@ -95,7 +98,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
               className="wizard-input"
               min="1"
             />
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <div className="wizard-buttons">
               <button onClick={() => setStep(1)}>Back</button>
               <button disabled={!childAge} onClick={() => setStep(3)}>Continue</button>
             </div>
@@ -120,8 +123,35 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <div className="wizard-buttons">
               <button onClick={() => setStep(2)}>Back</button>
+              <button onClick={() => setStep(4)}>Continue</button>
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="step-transition">
+            <StepIndicator />
+            <h2>Select the language you want to teach {childName}</h2>
+            <div className="flag-select-grid">
+              <div
+                className={`flag-option ${language === 'en' ? 'selected' : ''}`}
+                onClick={() => setLanguage('en')}
+              >
+                <Flag code="us" style={{ width: 60, height: 40 }} />
+                <p>English</p>
+              </div>
+              <div
+                className={`flag-option ${language === 'ar' ? 'selected' : ''}`}
+                onClick={() => setLanguage('ar')}
+              >
+                <Flag code="sa" style={{ width: 60, height: 40 }} />
+                <p>Arabic</p>
+              </div>
+            </div>
+            <div className="wizard-buttons">
+              <button onClick={() => setStep(3)}>Back</button>
               <button onClick={handleSubmit} disabled={loading}>
                 {loading ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Child' : 'Add Child')}
               </button>

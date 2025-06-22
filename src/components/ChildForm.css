@@ -164,3 +164,23 @@
     transform: translateY(0);
   }
 }
+
+.flag-select-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.flag-option {
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.flag-option.selected {
+  border-color: #4CAF50;
+}
