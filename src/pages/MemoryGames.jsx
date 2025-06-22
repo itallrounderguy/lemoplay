@@ -21,12 +21,6 @@ const difficultyLevels = [
 ];
 
 const MemoryGames = () => {
-
-  useEffect(() => {
-  const lang = localStorage.getItem('language') || 'off';
-  console.log('Selected Language:', lang);
-  }, []);
-
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedChildId } = useSelectedChild();
@@ -37,10 +31,37 @@ const MemoryGames = () => {
   const [gameLoaded, setGameLoaded] = useState(false);
   const [showGame, setShowGame] = useState(false);
   const [levelIndex, setLevelIndex] = useState(0);
+  const [audioMap, setAudioMap] = useState(new Map());
 
-  const { rows, cols } = { ...difficultyLevels[levelIndex] };
+  const { rows, cols } = difficultyLevels[levelIndex];
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
+
+  // Preload audio files based on selected language
+  useEffect(() => {
+    const lang = localStorage.getItem('language') || 'en'; // fallback to English
+    const loadAudioFiles = async () => {
+      try {
+        const res = await fetch('https://hjpuilfc33.execute-api.us-east-1.amazonaws.com/prod/public?category=colors');
+        const data = await res.json();
+        const map = new Map();
+
+        for (const item of data.items) {
+          const colorName = item.sprName.toLowerCase();
+          const audioUrl = `${item.soundLocation}${lang}/${colorName}.mp3`;
+          const audio = new Audio(audioUrl);
+          map.set(colorName, audio);
+        }
+
+        setAudioMap(map);
+        console.log('🎧 Audio files loaded for language:', lang);
+      } catch (error) {
+        console.error('❌ Failed to preload audio:', error);
+      }
+    };
+
+    loadAudioFiles();
+  }, []);
 
   const handleFullscreenBack = () => {
     if (gameIframeRef.current?.contentWindow) {
@@ -94,28 +115,21 @@ const MemoryGames = () => {
         }
       }
 
-     if (parsedData?.action === 'update') {
-  if (parsedData.loaded === 1) {
-    setGameLoaded(true);
-    switchAnimation('idle');
-  }
-}
+      if (parsedData?.action === 'update' && parsedData.loaded === 1) {
+        setGameLoaded(true);
+        switchAnimation('idle');
+      }
 
-  if (parsedData?.action === 'talk' && parsedData.color) {
-    const color = parsedData.color.toString();
-    console.log('Talk color received:', color);
-
-    // Trigger TTS using Web Speech API
-    /*
-    const utterance = new SpeechSynthesisUtterance(color);
-    utterance.lang = 'en-US'; // You can adjust this if needed
-    utterance.rate = 0.8; // slower
-    window.speechSynthesis.cancel(); // Stop any previous speech
-    window.speechSynthesis.speak(utterance);
-    */
-
-  }
-
+      if (parsedData?.action === 'talk' && parsedData.color) {
+        const color = parsedData.color.toLowerCase();
+        const audio = audioMap.get(color);
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch((e) => console.warn('⚠️ Playback error:', e));
+        } else {
+          console.warn('⚠️ No audio found for:', color);
+        }
+      }
     };
 
     const handleKeyDown = (e) => {
@@ -128,7 +142,7 @@ const MemoryGames = () => {
       window.removeEventListener('message', receiveMessageFromGame);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [audioMap]);
 
   return (
     <div className="memory-container">
