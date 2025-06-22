@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 import ChildForm from './ChildForm';
-import { Edit3, Trash2, RefreshCcw } from 'lucide-react';
+import { Edit3, Trash2, RefreshCcw, VolumeX, Volume2 } from 'lucide-react';
 import './Profiles.css';
-import '../components/bubble.css'; // ✅ correct path
+import '../components/bubble.css';
+import Flag from 'react-world-flags';
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
 
@@ -19,6 +20,17 @@ const Profile = ({
   const [error, setError] = useState('');
   const [showChildForm, setShowChildForm] = useState(false);
   const [editingChild, setEditingChild] = useState(null);
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('language') || 'off';
+  });
+  const [showLangMenu, setShowLangMenu] = useState(false);
+
+
+  useEffect(() => {
+  const lang = localStorage.getItem('language') || 'off';
+  console.log('Selected Language:', lang);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -91,6 +103,16 @@ const Profile = ({
     }
   };
 
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    if (lang === 'off') {
+      localStorage.removeItem('language');
+    } else {
+      localStorage.setItem('language', lang);
+    }
+    setShowLangMenu(false);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
@@ -101,23 +123,21 @@ const Profile = ({
   return (
     <div className="child-section">
       {!selectedChildId && (
-  <div className="lemo-intro">
-   
-    <iframe
-      src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/intro1/intro1.html"
-      width="220"
-      height="140"
-      className="intro1-iframe"
-      title="intro1"
-      allowTransparency="true"
-    ></iframe>
+        <div className="lemo-intro">
+          <iframe
+            src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/intro1/intro1.html"
+            width="220"
+            height="140"
+            className="intro1-iframe"
+            title="intro1"
+            allowTransparency="true"
+          ></iframe>
 
-    {/* ✅ Animated dialog bubble */}
-    <div className="lemo-bubble">
-      Hi! Add a child to begin, or select one you've already created.
-    </div>
-  </div>
-)}
+          <div className="lemo-bubble">
+            Hi! Add a child to begin, or select one you've already created.
+          </div>
+        </div>
+      )}
 
       <div className={`child-grid ${selectedChildId ? 'single-view' : ''}`}>
         {filteredChildren.map(child => (
@@ -157,6 +177,58 @@ const Profile = ({
                   }}
                   title="Switch Child"
                 />
+                <div className="language-toggle-wrapper" onClick={(e) => e.stopPropagation()}>
+                  {language === 'off' ? (
+                    <VolumeX
+                      size={18}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setShowLangMenu(!showLangMenu)}
+                      title="Select Language"
+                    />
+                  ) : (
+                    <Volume2
+                      size={18}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setShowLangMenu(!showLangMenu)}
+                      title={`Current: ${language === 'en' ? 'English' : 'Arabic'}`}
+                    />
+                  )}
+                  {showLangMenu && (
+                    <div className="language-menu">
+                      <Flag
+                        code="us"
+                        style={{ width: '28px', height: '18px', cursor: 'pointer' }}
+                        title="English"
+                        onClick={() => handleLanguageChange('en')}
+                      />
+                      <Flag
+                        code="sa"
+                        style={{ width: '28px', height: '18px', cursor: 'pointer' }}
+                        title="Arabic"
+                        onClick={() => handleLanguageChange('ar')}
+                      />
+                      <div
+                        style={{
+                          width: '28px',
+                          height: '18px',
+                          backgroundColor: '#eee',
+                          color: '#888',
+                          fontSize: '12px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          border: '1px solid #ccc',
+                          cursor: 'pointer',
+                          borderRadius: '2px'
+                        }}
+                        title="Mute"
+                        onClick={() => handleLanguageChange('off')}
+                      >
+                        ❌
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 

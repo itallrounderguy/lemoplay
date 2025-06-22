@@ -1,11 +1,12 @@
 .child-tools {
   position: absolute;
-  top: -18px;
+  top: -28px; /* Increased from -18px */
   left: 8px;
   display: flex;
-  gap: 8px;
+  gap: 12px; /* More spacing between icons */
   z-index: 1;
 }
+
 
 .child-card {
   position: relative;
@@ -101,4 +102,28 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.language-toggle-wrapper {
+  position: relative;
+}
+
+.language-menu {
+  position: absolute;
+  top: 24px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+
+.language-menu img {
+  width: 24px;
+  height: 16px;
+  cursor: pointer;
 }

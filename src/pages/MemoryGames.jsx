@@ -21,6 +21,12 @@ const difficultyLevels = [
 ];
 
 const MemoryGames = () => {
+
+  useEffect(() => {
+  const lang = localStorage.getItem('language') || 'off';
+  console.log('Selected Language:', lang);
+  }, []);
+
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedChildId } = useSelectedChild();
@@ -88,10 +94,28 @@ const MemoryGames = () => {
         }
       }
 
-      if (parsedData?.action === 'update' && parsedData?.loaded === 1) {
-        setGameLoaded(true);
-        switchAnimation('idle');
-      }
+     if (parsedData?.action === 'update') {
+  if (parsedData.loaded === 1) {
+    setGameLoaded(true);
+    switchAnimation('idle');
+  }
+}
+
+  if (parsedData?.action === 'talk' && parsedData.color) {
+    const color = parsedData.color.toString();
+    console.log('Talk color received:', color);
+
+    // Trigger TTS using Web Speech API
+    /*
+    const utterance = new SpeechSynthesisUtterance(color);
+    utterance.lang = 'en-US'; // You can adjust this if needed
+    utterance.rate = 0.8; // slower
+    window.speechSynthesis.cancel(); // Stop any previous speech
+    window.speechSynthesis.speak(utterance);
+    */
+
+  }
+
     };
 
     const handleKeyDown = (e) => {
