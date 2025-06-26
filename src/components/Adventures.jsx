@@ -31,7 +31,7 @@ const cardsData = [
     defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/memorycards.png",
     sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
     text1: "Memory",
-    route: "/memory_games",
+    route: "/memory_subtypes", // 🔁 NEW intermediate route,
   },
 ];
 

@@ -5,6 +5,8 @@ import '../components/bubble.css';
 import GlobalMenu from '../components/GlobalMenu';
 import './MemoryGames.css';
 
+const topic = location.state?.topic || 'colors'; // default fallback
+
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
 const GAME_ORIGIN = new URL(GAME_URL).origin;
 
@@ -75,7 +77,7 @@ useEffect(() => {
     if (gameIframeRef.current?.contentWindow) {
       const resetMessage = {
         action: 'setup',
-        payload: { rows: 0, cols: 0, childId },
+        payload: { rows: 0, cols: 0, childId, topic  },
       };
       gameIframeRef.current.contentWindow.postMessage(resetMessage, GAME_ORIGIN);
       console.log('🔄 Reset message sent:', resetMessage);
@@ -86,7 +88,7 @@ useEffect(() => {
   const sendGameSetup = () => {
     const configMessage = {
       action: 'setup',
-      payload: { rows, cols, childId },
+      payload: { rows, cols, childId, topic }, // ✅ pass topic to game
     };
     if (gameIframeRef.current?.contentWindow) {
       gameIframeRef.current.contentWindow.postMessage(configMessage, GAME_ORIGIN);

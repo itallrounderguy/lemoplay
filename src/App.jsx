@@ -10,6 +10,7 @@ import MathLearn from './pages/MathLearn';
 import LogicLearn from './pages/LogicLearn';
 import MemoryGames from './pages/MemoryGames';
 import Preloader from './components/Preloader'; // ✅ Preloader imported
+import AdventuresSubTypes from './components/AdventuresSubTypes'; // 👈 Import it
 
 import './App.css';
 
@@ -98,6 +99,14 @@ const App = () => {
             element={
               <ProtectedRoute user={user}>
                 <MemoryGames />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/memory_subtypes"
+            element={
+              <ProtectedRoute user={user}>
+                <AdventuresSubTypes />
               </ProtectedRoute>
             }
           />
