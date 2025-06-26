@@ -29,17 +29,23 @@ const MemoryGames = () => {
 
   const gameIframeRef = useRef(null);
   const animIframeRef = useRef(null);
+  const applauseAudio = useRef(null); // ✅ define useRef inside the component
 
   const [gameLoaded, setGameLoaded] = useState(false);
   const [showGame, setShowGame] = useState(false);
   const [levelIndex, setLevelIndex] = useState(0);
   const [audioMap, setAudioMap] = useState(new Map());
-  const [showCelebration, setShowCelebration] = useState(false); // ⬅️ Celebration state
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const topic = location.state?.topic || 'colors';
   const { rows, cols } = difficultyLevels[levelIndex];
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
+
+  // 🔊 Preload applause sound
+  useEffect(() => {
+    applauseAudio.current = new Audio('https://learnify2025.s3.us-east-1.amazonaws.com/sounds/applause_cheer.mp3');
+  }, []);
 
   useEffect(() => {
     const lang = localStorage.getItem('language') || 'en';
@@ -75,7 +81,7 @@ const MemoryGames = () => {
     if (gameIframeRef.current?.contentWindow) {
       const resetMessage = {
         action: 'setup',
-        payload: { rows: 0, cols: 0, topic },
+        payload: { rows: 0, cols: 0, childId, topic },
       };
       gameIframeRef.current.contentWindow.postMessage(resetMessage, GAME_ORIGIN);
       console.log('🔄 Reset message sent:', resetMessage);
@@ -145,6 +151,16 @@ const MemoryGames = () => {
       if (parsedData?.action === 'update' && parsedData.completed === 1) {
         console.log('🎯 Game completed received from game iframe:', parsedData);
         setShowCelebration(true);
+      }
+
+      // 🔊 Handle applause sound trigger from game
+      if (parsedData?.action === 'play' && parsedData.sound === 'applause_cheer') {
+        console.log('🔊 Playing applause sound from game trigger');
+        const applause = applauseAudio.current;
+        if (applause) {
+          applause.currentTime = 0;
+          applause.play().catch((e) => console.warn('⚠️ Applause sound failed:', e));
+        }
       }
     };
 
@@ -230,7 +246,13 @@ const MemoryGames = () => {
         ></iframe>
 
         {showCelebration && (
-          <CelebrateModal onClose={() => setShowCelebration(false)} />
+          <CelebrateModal
+            onConfirm={() => {
+              setShowCelebration(false);
+              sendGameSetup();
+            }}
+            onCancel={() => navigate(-1)}
+          />
         )}
       </div>
     </div>
