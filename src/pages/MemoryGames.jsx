@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useSelectedChild from '../hooks/useSelectedChild';
 import '../components/bubble.css';
 import GlobalMenu from '../components/GlobalMenu';
-import './MemoryGames.css';
+import CelebrateModal from '../components/CelebrateModal';
 
-const topic = location.state?.topic || 'colors'; // default fallback
+import './MemoryGames.css';
 
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
 const GAME_ORIGIN = new URL(GAME_URL).origin;
@@ -34,50 +34,48 @@ const MemoryGames = () => {
   const [showGame, setShowGame] = useState(false);
   const [levelIndex, setLevelIndex] = useState(0);
   const [audioMap, setAudioMap] = useState(new Map());
+  const [showCelebration, setShowCelebration] = useState(false); // ⬅️ Celebration state
 
+  const topic = location.state?.topic || 'colors';
   const { rows, cols } = difficultyLevels[levelIndex];
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
 
-  // Preload audio files based on selected language
-useEffect(() => {
-  const lang = localStorage.getItem('language') || 'en';
-
-  // 🚫 Do not load audio files if language is disabled
-  if (lang === 'no' || lang === 'off') {
-    console.log('🔇 Audio loading skipped (language is muted)');
-    return;
-  }
-
-  const loadAudioFiles = async () => {
-    try {
-      const res = await fetch('https://hjpuilfc33.execute-api.us-east-1.amazonaws.com/prod/public?category=colors');
-      const data = await res.json();
-      const map = new Map();
-
-      for (const item of data.items) {
-        const colorName = item.sprName.toLowerCase();
-        const audioUrl = `${item.soundLocation}${lang}/${colorName}.mp3`;
-        const audio = new Audio(audioUrl);
-        map.set(colorName, audio);
-      }
-
-      setAudioMap(map);
-      console.log('🎧 Audio files loaded for language:', lang);
-    } catch (error) {
-      console.error('❌ Failed to preload audio:', error);
+  useEffect(() => {
+    const lang = localStorage.getItem('language') || 'en';
+    if (lang === 'no' || lang === 'off') {
+      console.log('🔇 Audio loading skipped (language is muted)');
+      return;
     }
-  };
 
-  loadAudioFiles();
-}, []);
+    const loadAudioFiles = async () => {
+      try {
+        const res = await fetch('https://hjpuilfc33.execute-api.us-east-1.amazonaws.com/prod/public?category=colors');
+        const data = await res.json();
+        const map = new Map();
 
+        for (const item of data.items) {
+          const colorName = item.sprName.toLowerCase();
+          const audioUrl = `${item.soundLocation}${lang}/${colorName}.mp3`;
+          const audio = new Audio(audioUrl);
+          map.set(colorName, audio);
+        }
+
+        setAudioMap(map);
+        console.log('🎧 Audio files loaded for language:', lang);
+      } catch (error) {
+        console.error('❌ Failed to preload audio:', error);
+      }
+    };
+
+    loadAudioFiles();
+  }, []);
 
   const handleFullscreenBack = () => {
     if (gameIframeRef.current?.contentWindow) {
       const resetMessage = {
         action: 'setup',
-        payload: { rows: 0, cols: 0, childId, topic  },
+        payload: { rows: 0, cols: 0, topic },
       };
       gameIframeRef.current.contentWindow.postMessage(resetMessage, GAME_ORIGIN);
       console.log('🔄 Reset message sent:', resetMessage);
@@ -88,7 +86,7 @@ useEffect(() => {
   const sendGameSetup = () => {
     const configMessage = {
       action: 'setup',
-      payload: { rows, cols, childId, topic }, // ✅ pass topic to game
+      payload: { rows, cols, childId, topic },
     };
     if (gameIframeRef.current?.contentWindow) {
       gameIframeRef.current.contentWindow.postMessage(configMessage, GAME_ORIGIN);
@@ -135,17 +133,18 @@ useEffect(() => {
         const audio = audioMap.get(color);
         if (audio) {
           audio.currentTime = 0;
-
-         // audio.play().catch((e) => console.warn('⚠️ Playback error:', e));
-          // Delay playback by 0.3 seconds
-        setTimeout(() => {
-          audio.play().catch((e) => console.warn('⚠️ Playback error:', e));
-        }, 350);
-
-
+          setTimeout(() => {
+            audio.play().catch((e) => console.warn('⚠️ Playback error:', e));
+          }, 350);
         } else {
           console.warn('⚠️ No audio found for:', color);
         }
+      }
+
+      // ✅ Handle game completion
+      if (parsedData?.action === 'update' && parsedData.completed === 1) {
+        console.log('🎯 Game completed received from game iframe:', parsedData);
+        setShowCelebration(true);
       }
     };
 
@@ -164,7 +163,6 @@ useEffect(() => {
   return (
     <div className="memory-container">
       <GlobalMenu />
-
       <div className="lemo-bubble">Choose difficulty:</div>
 
       <div className="lemo-slider-container">
@@ -230,6 +228,10 @@ useEffect(() => {
           title="Memory Game"
           className="fullscreen-game"
         ></iframe>
+
+        {showCelebration && (
+          <CelebrateModal onClose={() => setShowCelebration(false)} />
+        )}
       </div>
     </div>
   );

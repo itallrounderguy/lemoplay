@@ -1,0 +1,55 @@
+.logout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.celebrate-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  max-width: 320px;
+  width: 90%;
+}
+
+.modal-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.confirm-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #ccc;
+  color: black;
+}
+
+.spineanimation-iframe {
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
