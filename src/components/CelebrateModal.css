@@ -53,3 +53,43 @@
   padding: 0;
   display: block;
 }
+
+
+.modal-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column; /* ⬅️ Stack vertically */
+  align-items: center;
+  gap: 1.5rem; /* Space between buttons */
+}
+
+/* Circular Icon Buttons */
+.circle-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.circle-button:hover {
+  transform: scale(1.1);
+}
+
+.circle-button.green {
+  background-color: #4caf50; /* green */
+  width: 120px;
+  height: 120px;
+}
+
+.circle-button.red {
+  background-color: #f44336; /* red */
+}

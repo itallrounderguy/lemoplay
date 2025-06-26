@@ -14,10 +14,15 @@ const CelebrateModal = ({ onConfirm, onCancel }) => {
           allowTransparency="true"
         ></iframe>
 
-        <p>Play Again?</p>
+         <p>Play Again?</p>
+
         <div className="modal-buttons">
-          <button className="confirm-button" onClick={onConfirm}>Yes, Log Out</button>
-          <button className="cancel-button" onClick={onCancel}>Cancel</button>
+          <button className="circle-button green" onClick={onConfirm} aria-label="Yes">
+            ▶
+          </button>
+          <button className="circle-button red" onClick={onCancel} aria-label="No">
+            ✖
+          </button>
         </div>
       </div>
     </div>
