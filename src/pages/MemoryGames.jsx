@@ -5,7 +5,6 @@ import '../components/bubble.css';
 import GlobalMenu from '../components/GlobalMenu';
 import CelebrateModal from '../components/CelebrateModal';
 import { ArrowLeft } from 'lucide-react';
-
 import './MemoryGames.css';
 
 const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
