@@ -4,6 +4,7 @@ import useSelectedChild from '../hooks/useSelectedChild';
 import '../components/bubble.css';
 import GlobalMenu from '../components/GlobalMenu';
 import CelebrateModal from '../components/CelebrateModal';
+import { ArrowLeft } from 'lucide-react';
 
 import './MemoryGames.css';
 
@@ -41,6 +42,7 @@ const MemoryGames = () => {
   const { rows, cols } = difficultyLevels[levelIndex];
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
+
 
   // 🔊 Preload applause sound
   useEffect(() => {
@@ -177,7 +179,13 @@ const MemoryGames = () => {
   }, [audioMap]);
 
   return (
-    <div className="memory-container">
+     <div>
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
+            Back
+          </button>
+
+          <div className="memory-container">
       <GlobalMenu />
       <div className="lemo-bubble">Choose difficulty:</div>
 
@@ -255,6 +263,7 @@ const MemoryGames = () => {
           />
         )}
       </div>
+    </div>
     </div>
   );
 };
