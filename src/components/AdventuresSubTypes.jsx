@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Adventures.css'; // Reuse existing styles
+import { ArrowLeft } from 'lucide-react';
 
 const subCardsData = [
   {
@@ -38,7 +39,16 @@ const AdventuresSubTypes = () => {
     });
   };
 
+  const handleBack = () => {
+  navigate('/dashboard');
+  };
+
   return (
+    <div>
+      <button className="back-button" onClick={handleBack}>
+        <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
+        Back
+      </button>
     <div className="adventures">
       <div className="lemo-bubble">Choose a topic:</div>
       <div className="cards-grid">
@@ -53,6 +63,7 @@ const AdventuresSubTypes = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

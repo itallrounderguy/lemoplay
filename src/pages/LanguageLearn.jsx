@@ -19,7 +19,7 @@ const LanguageLearn = () => {
         <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
         Back
       </button>
-      <h1>LanguageLearn Adventure for Child ID: {childId}</h1>
+      <h1>Comming Soon :)</h1>
     </div>
   );
 };
