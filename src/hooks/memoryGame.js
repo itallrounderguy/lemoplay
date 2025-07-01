@@ -1,3 +1,5 @@
+//memoryGames.js
+
 export const GAME_URL = 'https://learnifylevels.s3.us-east-1.amazonaws.com/memorycards/index.html';
 export const GAME_ORIGIN = new URL(GAME_URL).origin;
 

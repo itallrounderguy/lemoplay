@@ -1,10 +1,10 @@
-// LanguageToggle.jsx
 import { useState } from 'react';
 import Flag from 'react-world-flags';
 import './LanguageToggle.css';
 
 const LanguageToggle = ({ language, onChange }) => {
   const [showMenu, setShowMenu] = useState(false);
+
   const toggleMenu = (e) => {
     e.stopPropagation();
     setShowMenu(!showMenu);
@@ -35,7 +35,7 @@ const LanguageToggle = ({ language, onChange }) => {
       )}
 
       {showMenu && (
-        <div className="language-menu">
+        <div className="language-menu" onClick={(e) => e.stopPropagation()}>
           <Flag
             code="us"
             className="language-flag"

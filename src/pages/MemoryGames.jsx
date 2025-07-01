@@ -23,7 +23,9 @@ const MemoryGames = () => {
 
   const [gameLoaded, setGameLoaded] = useState(false);
   const [showGame, setShowGame] = useState(false);
-  const [levelIndex, setLevelIndex] = useState(0);
+  //const [levelIndex, setLevelIndex] = useState(0);
+  const [levelIndex, setLevelIndex] = useState(Math.floor(DIFFICULTY_LEVELS.length / 2));
+
   const [showCelebration, setShowCelebration] = useState(false);
 
   const topic = location.state?.topic || 'nothing'; // safe default;

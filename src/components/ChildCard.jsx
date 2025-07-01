@@ -1,4 +1,3 @@
-// ChildCard.jsx
 import { Edit3, Trash2, RefreshCcw } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
 import './Profiles.css';
@@ -22,7 +21,7 @@ const ChildCard = ({
           <RefreshCcw size={18} onClick={(e) => { e.stopPropagation(); onSwitch(); }} title="Switch Child" />
           <LanguageToggle
             language={language}
-            onChange={(lang) => { e.stopPropagation(); onLanguageChange(lang); }}
+            onChange={onLanguageChange} // ✅ fixed: no unnecessary event here
           />
         </div>
       )}
