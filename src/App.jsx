@@ -11,6 +11,7 @@ import LogicLearn from './pages/LogicLearn';
 import MemoryGames from './pages/MemoryGames';
 import Preloader from './components/Preloader'; // ✅ Preloader imported
 import AdventuresSubTypes from './components/AdventuresSubTypes'; // 👈 Import it
+import { useTranslation } from 'react-i18next';
 
 import './App.css';
 
@@ -37,6 +38,16 @@ const App = () => {
 
   const location = useLocation();
   const isAuthPage = location.pathname === '/' || location.pathname === '/login';
+
+
+  const { i18n } = useTranslation();
+
+  // ⬇️ Add RTL support here
+  useEffect(() => {
+    const direction = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = direction;
+    document.body.dir = direction; // Optional: also affect body
+  }, [i18n.language]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
