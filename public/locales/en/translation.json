@@ -1,3 +1,21 @@
 {
-  "loginPrompt": "Please log in to continue"
+  "loginPrompt": "Please log in to continue",
+  "step1Title": "What is your child’s name?",
+  "namePlaceholder": "Name",
+  "continue": "Continue",
+  "back": "Back",
+  "step2Title": "How old is {{childName}}?",
+  "step2Subtitle": "We’ll personalize the experience",
+  "agePlaceholder": "Age",
+  "step3Title": "Let’s choose a game buddy for {{childName}}",
+  "step4Title": "Which language would you like {{childName}} to learn?",
+  "addChild": "Add Child",
+  "updateChild": "Update Child",
+  "adding": "Adding...",
+  "updating": "Updating...",
+  "addFailed": "Add failed",
+  "updateFailed": "Update failed",
+  "errorOccurred": "Something went wrong. Check console.",
+  "congratulations": "Congratulations!",
+  "step5Message": "{{childName}} can start learning now!"
 }

@@ -1,3 +1,21 @@
 {
-  "loginPrompt": "Bitte melden Sie sich an, um fortzufahren"
+   "loginPrompt": "Bitte melden Sie sich an, um fortzufahren",
+  "step1Title": "Wie heißt dein Kind?",
+  "namePlaceholder": "Name",
+  "continue": "Weiter",
+  "back": "Zurück",
+  "step2Title": "Wie alt ist {{childName}}?",
+  "step2Subtitle": "Wir personalisieren das Erlebnis",
+  "agePlaceholder": "Alter",
+  "step3Title": "Wähle einen Spielkameraden für {{childName}}",
+  "step4Title": "Welche Sprache soll {{childName}} lernen?",
+  "addChild": "Kind hinzufügen",
+  "updateChild": "Kind aktualisieren",
+  "adding": "Wird hinzugefügt...",
+  "updating": "Wird aktualisiert...",
+  "addFailed": "Hinzufügen fehlgeschlagen",
+  "updateFailed": "Aktualisierung fehlgeschlagen",
+  "errorOccurred": "Etwas ist schiefgelaufen. Siehe Konsole.",
+  "congratulations": "Herzlichen Glückwunsch!",
+  "step5Message": "{{childName}} kann jetzt mit dem Lernen beginnen!"
 }

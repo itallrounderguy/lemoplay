@@ -1,3 +1,21 @@
 {
-  "loginPrompt": "يرجى تسجيل الدخول للمتابعة"
+  "loginPrompt": "يرجى تسجيل الدخول للمتابعة",
+  "step1Title": "ما هو اسم طفلك؟",
+  "namePlaceholder": "الاسم",
+  "continue": "استمرار",
+  "back": "رجوع",
+  "step2Title": "كم عمر {{childName}}؟",
+  "step2Subtitle": "سنقوم بتخصيص التجربة",
+  "agePlaceholder": "العمر",
+  "step3Title": "دعنا نختار صديقًا للعب مع {{childName}}",
+  "step4Title": "ما اللغة التي ترغب أن يتعلمها {{childName}}؟",
+  "addChild": "أضف طفل",
+  "updateChild": "تحديث الطفل",
+  "adding": "جارٍ الإضافة...",
+  "updating": "جارٍ التحديث...",
+  "addFailed": "فشل في الإضافة",
+  "updateFailed": "فشل في التحديث",
+  "errorOccurred": "حدث خطأ ما. تحقق من وحدة التحكم.",
+  "congratulations": "تهانينا!",
+  "step5Message": "{{childName}} يمكنه البدء في التعلم الآن!"
 }

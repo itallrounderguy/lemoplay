@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './ChildForm.css';
 import Flag from 'react-world-flags';
+import { useTranslation } from 'react-i18next';
 
 const avatars = [
   'Lion', 'Tiger', 'Cat', 'Dog', 'Fox',
@@ -9,8 +10,9 @@ const avatars = [
 ];
 
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
-  const isEditing = !!existingChild;
+  const { t } = useTranslation();
 
+  const isEditing = !!existingChild;
   const [step, setStep] = useState(1);
   const [childName, setChildName] = useState(existingChild?.childName || '');
   const [childAge, setChildAge] = useState(existingChild?.childAge?.toString() || '');
@@ -88,12 +90,12 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
         setTimeout(() => {
           onSuccess();
           onClose();
-        }, 3000);
+        }, 5000); // Show step 5 for 5 seconds
       } else {
-        alert((isEditing ? 'Update' : 'Add') + ' failed: ' + data.message);
+        alert((isEditing ? t('updateFailed') : t('addFailed')) + ': ' + data.message);
       }
     } catch (err) {
-      alert('Something went wrong. Check console.');
+      alert(t('errorOccurred'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -130,34 +132,34 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
         {step === 1 && (
           <div className="step-transition">
             <StepIndicator />
-            <h2>What is your child’s name?</h2>
+            <h2>{t('step1Title')}</h2>
             <input
               type="text"
               value={childName}
               onChange={e => setChildName(e.target.value)}
-              placeholder="Name"
+              placeholder={t('namePlaceholder')}
               className="wizard-input"
             />
-            <button disabled={!childName} onClick={() => setStep(2)}>Continue</button>
+            <button disabled={!childName} onClick={() => setStep(2)}>{t('continue')}</button>
           </div>
         )}
 
         {step === 2 && (
           <div className="step-transition">
             <StepIndicator />
-            <h2>How old is {childName}?</h2>
-            <p className="subtext">We’ll personalize the experience</p>
+            <h2>{t('step2Title', { childName })}</h2>
+            <p className="subtext">{t('step2Subtitle')}</p>
             <input
               type="number"
               value={childAge}
               onChange={e => setChildAge(e.target.value)}
-              placeholder="Age"
+              placeholder={t('agePlaceholder')}
               className="wizard-input"
               min="1"
             />
             <div className="wizard-buttons">
-              <button onClick={() => setStep(1)}>Back</button>
-              <button disabled={!childAge} onClick={() => setStep(3)}>Continue</button>
+              <button onClick={() => setStep(1)}>{t('back')}</button>
+              <button disabled={!childAge} onClick={() => setStep(3)}>{t('continue')}</button>
             </div>
           </div>
         )}
@@ -165,7 +167,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
         {step === 3 && (
           <div className="step-transition">
             <StepIndicator />
-            <h2>Choose a Character for {childName}</h2>
+            <h2>{t('step3Title', { childName })}</h2>
             <div className="avatar-grid">
               {avatars.map(name => (
                 <div
@@ -181,8 +183,8 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
               ))}
             </div>
             <div className="wizard-buttons">
-              <button onClick={() => setStep(2)}>Back</button>
-              <button onClick={() => setStep(4)}>Continue</button>
+              <button onClick={() => setStep(2)}>{t('back')}</button>
+              <button onClick={() => setStep(4)}>{t('continue')}</button>
             </div>
           </div>
         )}
@@ -190,7 +192,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
         {step === 4 && (
           <div className="step-transition">
             <StepIndicator />
-            <h2>Select the language you want to teach {childName}</h2>
+            <h2>{t('step4Title', { childName })}</h2>
             <div className="flag-select-grid">
               <div
                 className={`flag-option ${language === 'en' ? 'selected' : ''}`}
@@ -204,15 +206,15 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
                 onClick={() => setLanguage('ar')}
               >
                 <Flag code="sa" style={{ width: 60, height: 40 }} />
-                <p>Arabic</p>
+                <p>العربية</p>
               </div>
             </div>
             <div className="wizard-buttons">
-              <button onClick={() => setStep(3)}>Back</button>
+              <button onClick={() => setStep(3)}>{t('back')}</button>
               <button onClick={handleSubmit} disabled={loading}>
                 {loading
-                  ? (isEditing ? 'Updating...' : 'Adding...')
-                  : (isEditing ? 'Update Child' : 'Add Child')}
+                  ? (isEditing ? t('updating') : t('adding'))
+                  : (isEditing ? t('updateChild') : t('addChild'))}
               </button>
             </div>
           </div>
@@ -221,8 +223,8 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
         {step === 5 && (
           <div className="step-transition">
             <StepIndicator />
-            <h2>🎉 Congratulations!</h2>
-            <p>{childName} has been added successfully and is ready to start learning!</p>
+            <h2>🎉 {t('congratulations')}</h2>
+            <p>{t('step5Message', { childName })}</p>
           </div>
         )}
       </div>
