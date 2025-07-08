@@ -19,22 +19,29 @@ const Profile = ({ resetSelection, setSelectedChildId, selectedChildId, setSelec
   useEffect(() => {
     if (!user) return;
 
-    const fetchChildren = async () => {
-      try {
-        const res = await fetch(`${CHILDREN_API}/${user.sub}`, {
-          headers: { 'Content-Type': 'application/json', 'x-user-id': user.sub },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setChildren(data);
-        }
-      } catch (err) {
-        console.error('Error fetching children:', err);
-        setError('Failed to fetch children');
-      } finally {
-        setLoading(false);
+const fetchChildren = async () => {
+  try {
+    const res = await fetch(`${CHILDREN_API}/${user.sub}`, {
+      headers: { 'Content-Type': 'application/json', 'x-user-id': user.sub },
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      setChildren(data);
+
+      // ✅ Automatically open wizard if user has no children
+      if (data.length === 0 && !selectedChildId) {
+        setShowChildForm(true);
       }
-    };
+    }
+  } catch (err) {
+    console.error('Error fetching children:', err);
+    setError('Failed to fetch children');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     fetchChildren();
   }, [user]);
@@ -107,14 +114,7 @@ const Profile = ({ resetSelection, setSelectedChildId, selectedChildId, setSelec
     <div className="child-section">
       {!selectedChildId && (
         <div className="lemo-intro">
-          <iframe
-            src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/intro1/intro1.html"
-            width="220"
-            height="140"
-            className="intro1-iframe"
-            title="intro1"
-            allowTransparency="true"
-          ></iframe>
+         
           <div className="lemo-bubble">
             Hi! Add a child to begin, or select one you've already created.
           </div>

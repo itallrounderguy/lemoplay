@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './ChildForm.css';
 import Flag from 'react-world-flags';
 
@@ -17,6 +17,47 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const [avatar, setAvatar] = useState(existingChild?.avatar || 'Lion');
   const [language, setLanguage] = useState(existingChild?.language || 'en');
   const [loading, setLoading] = useState(false);
+  const [iframeReady, setIframeReady] = useState(false);
+
+  const iframeRef = useRef(null);
+  const hasPlayedIntro = useRef(false);
+
+  useEffect(() => {
+    const handleSpineReady = (event) => {
+      if (event.data?.type === 'spine-ready') {
+        setIframeReady(true);
+      }
+    };
+    window.addEventListener('message', handleSpineReady);
+    return () => window.removeEventListener('message', handleSpineReady);
+  }, []);
+
+  const playAnimation = (animation) => {
+    if (!iframeReady || !iframeRef.current) return;
+    iframeRef.current.contentWindow.postMessage(
+      { action: 'changeAnimation', animation },
+      '*'
+    );
+  };
+
+  useEffect(() => {
+    if (!iframeReady) return;
+
+    if (step < 5) {
+      if (step === 1 && hasPlayedIntro.current) return;
+
+      playAnimation('talk');
+      const timeout = setTimeout(() => playAnimation('idle'), 2000);
+      hasPlayedIntro.current = true;
+      return () => clearTimeout(timeout);
+    }
+  }, [step, iframeReady]);
+
+  useEffect(() => {
+    if (iframeReady && step === 5) {
+      playAnimation('thumbup');
+    }
+  }, [step, iframeReady]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -36,15 +77,18 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           childName,
           childAge: parseInt(childAge, 10),
           avatar,
-          language, // ✅ Send selected language to backend
+          language,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        onSuccess();
-        onClose();
+        setStep(5);
+        setTimeout(() => {
+          onSuccess();
+          onClose();
+        }, 3000);
       } else {
         alert((isEditing ? 'Update' : 'Add') + ' failed: ' + data.message);
       }
@@ -58,17 +102,30 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
 
   const StepIndicator = () => (
     <div className="step-indicator">
-      <div className={`step-dot ${step === 1 ? 'active' : ''}`} />
-      <div className={`step-dot ${step === 2 ? 'active' : ''}`} />
-      <div className={`step-dot ${step === 3 ? 'active' : ''}`} />
-      <div className={`step-dot ${step === 4 ? 'active' : ''}`} />
+      {[1, 2, 3, 4, 5].map(n => (
+        <div key={n} className={`step-dot ${step === n ? 'active' : ''}`} />
+      ))}
     </div>
   );
 
   return (
     <div className="modal-overlay">
       <div className="modal-content child-wizard">
-        <button className="close-btn" onClick={onClose}>×</button>
+        {step !== 5 && (
+          <button className="close-btn" onClick={onClose}>×</button>
+        )}
+
+        <div className="lemo-animation-wrapper">
+          <iframe
+            ref={iframeRef}
+            src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/profiles/profiles.html?animation=idle&scale=1"
+            width="220"
+            height="200"
+            className="intro1-iframe"
+            title="Lemo"
+            allowTransparency="true"
+          />
+        </div>
 
         {step === 1 && (
           <div className="step-transition">
@@ -153,9 +210,19 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
             <div className="wizard-buttons">
               <button onClick={() => setStep(3)}>Back</button>
               <button onClick={handleSubmit} disabled={loading}>
-                {loading ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Child' : 'Add Child')}
+                {loading
+                  ? (isEditing ? 'Updating...' : 'Adding...')
+                  : (isEditing ? 'Update Child' : 'Add Child')}
               </button>
             </div>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="step-transition">
+            <StepIndicator />
+            <h2>🎉 Congratulations!</h2>
+            <p>{childName} has been added successfully and is ready to start learning!</p>
           </div>
         )}
       </div>
