@@ -4,11 +4,14 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '../App';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
+  // Inside component
+  const { t } = useTranslation();
 
   // Redirect to the originally intended route or default to dashboard
   const from = location.state?.from?.pathname || '/dashboard';
@@ -29,7 +32,7 @@ const Login = () => {
 
   return (
    <div className="login-section">
-  <h2>Please log in to continue</h2>
+  <h2>{t('loginPrompt')}</h2>
   <div className="google-btn-wrapper">
     <GoogleLogin
       ux_mode="popup"
