@@ -4,9 +4,9 @@ import Flag from 'react-world-flags';
 import { useTranslation } from 'react-i18next';
 
 const avatars = [
-  'Lion', 'Tiger', 'Cat', 'Dog', 'Fox',
-  'Frog', 'Duck', 'Hippo', 'Bear', 'Giraffe',
-  'Monkey', 'Elephant', 'Owl', 'Crab', 'Robot'
+  { label: 'Char1', src: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_1.png' },
+  { label: 'Char2', src: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_2.png' },
+  { label: 'Char3', src: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_3.png' },
 ];
 
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
@@ -16,13 +16,22 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const [step, setStep] = useState(1);
   const [childName, setChildName] = useState(existingChild?.childName || '');
   const [childAge, setChildAge] = useState(existingChild?.childAge?.toString() || '');
-  const [avatar, setAvatar] = useState(existingChild?.avatar || 'Lion');
+  const [avatar, setAvatar] = useState(existingChild?.avatar || avatars[0].label);
   const [language, setLanguage] = useState(existingChild?.language || 'en');
   const [loading, setLoading] = useState(false);
   const [iframeReady, setIframeReady] = useState(false);
 
   const iframeRef = useRef(null);
   const hasPlayedIntro = useRef(false);
+  const audioRef = useRef(new Audio());
+
+  const playAnimation = (animation) => {
+    if (!iframeReady || !iframeRef.current) return;
+    iframeRef.current.contentWindow.postMessage(
+      { action: 'changeAnimation', animation },
+      '*'
+    );
+  };
 
   useEffect(() => {
     const handleSpineReady = (event) => {
@@ -34,25 +43,30 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
     return () => window.removeEventListener('message', handleSpineReady);
   }, []);
 
-  const playAnimation = (animation) => {
-    if (!iframeReady || !iframeRef.current) return;
-    iframeRef.current.contentWindow.postMessage(
-      { action: 'changeAnimation', animation },
-      '*'
-    );
-  };
-
   useEffect(() => {
-    if (!iframeReady) return;
+    const audio = audioRef.current;
+    if (!iframeReady || (step === 1 && hasPlayedIntro.current)) return;
 
-    if (step < 5) {
-      if (step === 1 && hasPlayedIntro.current) return;
+    const langForThisStep = language;
+    const url = `https://learnify2025.s3.us-east-1.amazonaws.com/profiles/profiles_step${step}_${langForThisStep}.mp3`;
+    audio.src = url;
 
-      playAnimation('talk');
-      const timeout = setTimeout(() => playAnimation('idle'), 2000);
-      hasPlayedIntro.current = true;
-      return () => clearTimeout(timeout);
-    }
+    const handlePlay = () => playAnimation('talk');
+    const handleEnded = () => {
+      if (step !== 5) playAnimation('idle');
+    };
+
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('ended', handleEnded);
+    audio.play().catch(console.error);
+
+    if (step === 1) hasPlayedIntro.current = true;
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('ended', handleEnded);
+    };
   }, [step, iframeReady]);
 
   useEffect(() => {
@@ -90,7 +104,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
         setTimeout(() => {
           onSuccess();
           onClose();
-        }, 5000); // Show step 5 for 5 seconds
+        }, 5000);
       } else {
         alert((isEditing ? t('updateFailed') : t('addFailed')) + ': ' + data.message);
       }
@@ -140,7 +154,9 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
               placeholder={t('namePlaceholder')}
               className="wizard-input"
             />
-            <button disabled={!childName} onClick={() => setStep(2)}>{t('continue')}</button>
+            <button disabled={!childName} onClick={() => setStep(2)}>
+              {t('continue')}
+            </button>
           </div>
         )}
 
@@ -159,7 +175,9 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
             />
             <div className="wizard-buttons">
               <button onClick={() => setStep(1)}>{t('back')}</button>
-              <button disabled={!childAge} onClick={() => setStep(3)}>{t('continue')}</button>
+              <button disabled={!childAge} onClick={() => setStep(3)}>
+                {t('continue')}
+              </button>
             </div>
           </div>
         )}
@@ -169,16 +187,13 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
             <StepIndicator />
             <h2>{t('step3Title', { childName })}</h2>
             <div className="avatar-grid">
-              {avatars.map(name => (
+              {avatars.map(({ label, src }) => (
                 <div
-                  key={name}
-                  className={`avatar-option ${avatar === name ? 'selected' : ''}`}
-                  onClick={() => setAvatar(name)}
+                  key={label}
+                  className={`avatar-option ${avatar === label ? 'selected' : ''}`}
+                  onClick={() => setAvatar(label)}
                 >
-                  <img
-                    src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${name}`}
-                    alt={name}
-                  />
+                  <img src={src} alt={label} />
                 </div>
               ))}
             </div>
@@ -212,9 +227,8 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
             <div className="wizard-buttons">
               <button onClick={() => setStep(3)}>{t('back')}</button>
               <button onClick={handleSubmit} disabled={loading}>
-                {loading
-                  ? (isEditing ? t('updating') : t('adding'))
-                  : (isEditing ? t('updateChild') : t('addChild'))}
+                {loading ? (isEditing ? t('updating') : t('adding'))
+                         : (isEditing ? t('updateChild') : t('addChild'))}
               </button>
             </div>
           </div>

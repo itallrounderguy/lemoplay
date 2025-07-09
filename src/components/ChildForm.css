@@ -86,24 +86,26 @@
 
 .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(3, 1fr); /* was 4, now 3 */
+  gap: 16px; /* more breathing room */
   margin-bottom: 1rem;
 }
 
 .avatar-option {
   border: 2px solid transparent;
-  border-radius: 50%;
+  border-radius: 12px; /* rectangular with rounded corners */
   padding: 5px;
   cursor: pointer;
   transition: border 0.2s;
 }
 
 .avatar-option img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px; /* match the frame shape */
+  object-fit: contain; /* Shows the full image */
 }
+
 
 .avatar-option.selected {
   border-color: #00bcd4;
@@ -183,4 +185,11 @@
 
 .flag-option.selected {
   border-color: #4CAF50;
+}
+
+.wizard-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px; /* Add spacing between buttons */
+  margin-top: 1rem;
 }

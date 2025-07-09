@@ -1,4 +1,3 @@
-// Profile.jsx (refactored)
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 import ChildForm from './ChildForm';
@@ -7,7 +6,12 @@ import './Profiles.css';
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
 
-const Profile = ({ resetSelection, setSelectedChildId, selectedChildId, setSelectedChildData }) => {
+const Profile = ({
+  resetSelection,
+  setSelectedChildId,
+  selectedChildId,
+  setSelectedChildData,
+}) => {
   const { user } = useContext(UserContext);
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,29 +23,31 @@ const Profile = ({ resetSelection, setSelectedChildId, selectedChildId, setSelec
   useEffect(() => {
     if (!user) return;
 
-const fetchChildren = async () => {
-  try {
-    const res = await fetch(`${CHILDREN_API}/${user.sub}`, {
-      headers: { 'Content-Type': 'application/json', 'x-user-id': user.sub },
-    });
+    const fetchChildren = async () => {
+      try {
+        const res = await fetch(`${CHILDREN_API}/${user.sub}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-id': user.sub,
+          },
+        });
 
-    if (res.ok) {
-      const data = await res.json();
-      setChildren(data);
+        if (res.ok) {
+          const data = await res.json();
+          setChildren(data);
 
-      // ✅ Automatically open wizard if user has no children
-      if (data.length === 0 && !selectedChildId) {
-        setShowChildForm(true);
+          // Automatically open wizard if no children exist
+          if (data.length === 0 && !selectedChildId) {
+            setShowChildForm(true);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching children:', err);
+        setError('Failed to fetch children');
+      } finally {
+        setLoading(false);
       }
-    }
-  } catch (err) {
-    console.error('Error fetching children:', err);
-    setError('Failed to fetch children');
-  } finally {
-    setLoading(false);
-  }
-};
-
+    };
 
     fetchChildren();
   }, [user]);
@@ -108,13 +114,14 @@ const fetchChildren = async () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-  const filteredChildren = selectedChildId ? children.filter(c => c.childId === selectedChildId) : children;
+  const filteredChildren = selectedChildId
+    ? children.filter(c => c.childId === selectedChildId)
+    : children;
 
   return (
     <div className="child-section">
       {!selectedChildId && (
         <div className="lemo-intro">
-         
           <div className="lemo-bubble">
             Hi! Add a child to begin, or select one you've already created.
           </div>
@@ -149,14 +156,17 @@ const fetchChildren = async () => {
             onLanguageChange={handleLanguageChange}
           />
         ))}
+      </div>
 
-        {!selectedChildId && children.length < 5 && (
+      {/* ✅ Add a child button shown under the grid */}
+      {!selectedChildId && children.length < 5 && (
+        <div className="add-child-wrapper">
           <div className="child-add-card" onClick={() => setShowChildForm(true)}>
             <div className="add-avatar">+</div>
             <span className="add-label">Add a child</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {showChildForm && (
         <ChildForm

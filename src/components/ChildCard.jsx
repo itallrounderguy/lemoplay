@@ -2,6 +2,14 @@ import { Edit3, Trash2, RefreshCcw } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
 import './Profiles.css';
 
+// Avatar mapping
+const avatarMap = {
+  Char1: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_1.png',
+  Char2: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_2.png',
+  Char3: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_3.png',
+  // Add more if needed
+};
+
 const ChildCard = ({
   child,
   isSelected,
@@ -21,15 +29,16 @@ const ChildCard = ({
           <RefreshCcw size={18} onClick={(e) => { e.stopPropagation(); onSwitch(); }} title="Switch Child" />
           <LanguageToggle
             language={language}
-            onChange={onLanguageChange} // ✅ fixed: no unnecessary event here
+            onChange={onLanguageChange}
           />
         </div>
       )}
 
       <div className="child-avatar">
         <img
-          src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${child.avatar || 'avatar'}`}
-          alt="avatar"
+          src={avatarMap[child.avatar] || avatarMap.Char1}
+          alt={child.childName}
+          className="child-avatar-img"
         />
       </div>
       <span className="child-name">{child.childName}</span>
