@@ -1,14 +1,24 @@
 {
-  "loginPrompt": "Please log in to continue",
+  
+
   "step1Title": "What is your child’s name?",
+  "step1Subtitle": "you can enter a nick name if you feel too! : ) you can changed it any time later",
+
+  "step2Title": "How old is {{childName}}?",
+  "step2Subtitle": "We’ll use the age to personalize the learning experience",
+
+  "step3Title": "Choose a hero for the adventures",
+  "step3Subtitle": "you can changed it any time later",
+
+  "step4Title": "Which language would you like {{childName}} to learn?",
+  "step4Subtitle": "you can changed it any time later",
+
+  "loginPrompt": "Please log in to continue",
+  "step5Message": "{{childName}} can start learning now!",
   "namePlaceholder": "Name",
   "continue": "Continue",
   "back": "Back",
-  "step2Title": "How old is {{childName}}?",
-  "step2Subtitle": "We’ll personalize the experience",
   "agePlaceholder": "Age",
-  "step3Title": "Let’s choose a game buddy for {{childName}}",
-  "step4Title": "Which language would you like {{childName}} to learn?",
   "addChild": "Add Child",
   "updateChild": "Update Child",
   "adding": "Adding...",
@@ -17,5 +27,6 @@
   "updateFailed": "Update failed",
   "errorOccurred": "Something went wrong. Check console.",
   "congratulations": "Congratulations!",
-  "step5Message": "{{childName}} can start learning now!"
+  "home": "Home",
+  "logout": "Log Out"
 }

@@ -1,14 +1,24 @@
 {
+   
+  "step1Title": "أدخل إسم أللاعب",
+  "step1Subtitle": "يمكنك إدخال إسم مستعار! : ) يمكنك أيضاَ تغيير ألأسم في أي وقت لاحقاَ",
+  
+  "step2Title": "كم عمر {{childName}}؟",
+  "step2Subtitle": "سنستخدم العمر لتخصيص تجربة التعلم",
+
+  "step3Title": "إختر بطل أللعبة",
+  "step3Subtitle": "يمكنك تغيير ألبطل في أي وقت لاحقاَ",
+
+  "step4Title": "ما اللغة التي ترغب أن يتعلمها {{childName}}؟",
+  "step4Subtitle": "يمكنك تغيير أللغة في أي وقت لاحقاَ",
+
+  "step5Message": "{{childName}} يمكنه البدء في التعلم الآن!",
+
   "loginPrompt": "يرجى تسجيل الدخول للمتابعة",
-  "step1Title": "ما هو اسم طفلك؟",
   "namePlaceholder": "الاسم",
   "continue": "استمرار",
   "back": "رجوع",
-  "step2Title": "كم عمر {{childName}}؟",
-  "step2Subtitle": "سنقوم بتخصيص التجربة",
   "agePlaceholder": "العمر",
-  "step3Title": "دعنا نختار صديقًا للعب مع {{childName}}",
-  "step4Title": "ما اللغة التي ترغب أن يتعلمها {{childName}}؟",
   "addChild": "أضف طفل",
   "updateChild": "تحديث الطفل",
   "adding": "جارٍ الإضافة...",
@@ -17,5 +27,6 @@
   "updateFailed": "فشل في التحديث",
   "errorOccurred": "حدث خطأ ما. تحقق من وحدة التحكم.",
   "congratulations": "تهانينا!",
-  "step5Message": "{{childName}} يمكنه البدء في التعلم الآن!"
+  "home": "الرئيسية",
+  "logout": "تسجيل الخروج"
 }

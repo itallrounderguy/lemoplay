@@ -3,6 +3,7 @@ import './ChildForm.css';
 import Flag from 'react-world-flags';
 import { useTranslation } from 'react-i18next';
 import avatars from './avatars';
+import i18n from 'i18next';
 
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const { t } = useTranslation();
@@ -12,7 +13,8 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const [childName, setChildName] = useState(existingChild?.childName || '');
   const [childAge, setChildAge] = useState(existingChild?.childAge?.toString() || '');
   const [avatar, setAvatar] = useState(existingChild?.avatar || avatars[0].label);
-  const [language, setLanguage] = useState(existingChild?.language || 'en');
+  const detectedLang = i18n.language?.split('-')[0] || 'en';
+  const [language, setLanguage] = useState(existingChild?.language || detectedLang);
   const [loading, setLoading] = useState(false);
   const [iframeReady, setIframeReady] = useState(false);
 
@@ -142,6 +144,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           <div className="step-transition">
             <StepIndicator />
             <h2>{t('step1Title')}</h2>
+            <p className="subtext">{t('step1Subtitle')}</p>
             <input
               type="text"
               value={childName}
@@ -181,6 +184,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           <div className="step-transition">
             <StepIndicator />
             <h2>{t('step3Title', { childName })}</h2>
+            <p className="subtext">{t('step3Subtitle')}</p>
             <div className="avatar-grid">
               {avatars.map(({ label, src }) => (
                 <div
@@ -203,6 +207,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           <div className="step-transition">
             <StepIndicator />
             <h2>{t('step4Title', { childName })}</h2>
+            <p className="subtext">{t('step4Subtitle')}</p>
             <div className="flag-select-grid">
               <div
                 className={`flag-option ${language === 'en' ? 'selected' : ''}`}
@@ -222,8 +227,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
             <div className="wizard-buttons">
               <button onClick={() => setStep(3)}>{t('back')}</button>
               <button onClick={handleSubmit} disabled={loading}>
-                {loading ? (isEditing ? t('updating') : t('adding'))
-                         : (isEditing ? t('updateChild') : t('addChild'))}
+                {loading ? (isEditing ? t('updating') : t('adding')) : (isEditing ? t('updateChild') : t('addChild'))}
               </button>
             </div>
           </div>

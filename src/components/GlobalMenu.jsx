@@ -4,12 +4,15 @@ import { UserContext } from '../App';
 import LogoutModal from './LogoutModal'; // ✅ import the modal
 import './GlobalMenu.css';
 import { Menu, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next'; // ✅ add this
+
 
 const GlobalMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false); // ✅ control modal
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
+  const { t } = useTranslation(); // ✅ hook for translations
 
   const handleMenuClick = () => setShowMenu(prev => !prev);
 
@@ -42,8 +45,12 @@ const GlobalMenu = () => {
 
       {showMenu && (
       <div className="mobile-menu">
-        <div className="menu-item" onClick={handlePlayersClick}>Home</div>
-        <div className="menu-item" onClick={handleLogoutClick}>Log Out</div>
+        <div className="menu-item" onClick={handlePlayersClick}>
+          {t('home')}
+        </div>
+        <div className="menu-item" onClick={handleLogoutClick}>
+          {t('logout')}
+        </div>
       </div>
     )}
 
