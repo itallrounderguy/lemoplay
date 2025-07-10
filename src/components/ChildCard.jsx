@@ -1,14 +1,8 @@
-import { Edit3, Trash2, RefreshCcw } from 'lucide-react';
+import { Edit3, Trash2, Users } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
 import './Profiles.css';
+import { avatarMap } from './avatars';
 
-// Avatar mapping
-const avatarMap = {
-  Char1: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_1.png',
-  Char2: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_2.png',
-  Char3: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_3.png',
-  // Add more if needed
-};
 
 const ChildCard = ({
   child,
@@ -26,7 +20,7 @@ const ChildCard = ({
         <div className="child-tools">
           <Edit3 size={18} onClick={(e) => { e.stopPropagation(); onEdit(); }} />
           <Trash2 size={18} onClick={(e) => { e.stopPropagation(); onDelete(); }} />
-          <RefreshCcw size={18} onClick={(e) => { e.stopPropagation(); onSwitch(); }} title="Switch Child" />
+          <Users  size={18} onClick={(e) => { e.stopPropagation(); onSwitch(); }} title="Switch Child" />
           <LanguageToggle
             language={language}
             onChange={onLanguageChange}

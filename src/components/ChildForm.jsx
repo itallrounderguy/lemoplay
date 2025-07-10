@@ -2,12 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import './ChildForm.css';
 import Flag from 'react-world-flags';
 import { useTranslation } from 'react-i18next';
-
-const avatars = [
-  { label: 'Char1', src: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_1.png' },
-  { label: 'Char2', src: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_2.png' },
-  { label: 'Char3', src: 'https://learnify2025.s3.us-east-1.amazonaws.com/profiles/char_3.png' },
-];
+import avatars from './avatars';
 
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const { t } = useTranslation();
