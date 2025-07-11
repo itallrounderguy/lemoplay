@@ -1,22 +1,31 @@
 {
-   "loginPrompt": "Bitte melden Sie sich an, um fortzufahren",
-  "step1Title": "Wie heißt dein Kind?",
+  "step1Title": "Gib den Namen des Spielers ein",
+  "step1Subtitle": "Du kannst auch einen Spitznamen eingeben! :) Du kannst den Namen später jederzeit ändern.",
+
+  "step2Title": "Wie alt ist {{childName}}?",
+  "step2Subtitle": "Wir verwenden das Alter, um das Lernerlebnis zu personalisieren.",
+
+  "step3Title": "Wähle deinen Spielhelden",
+  "step3Subtitle": "Du kannst den Helden später jederzeit ändern.",
+
+  "step4Title": "Welche Sprache soll {{childName}} lernen?",
+  "step4Subtitle": "Du kannst die Sprache später jederzeit ändern.",
+
+  "step5Message": "{{childName}} kann jetzt mit dem Lernen beginnen!",
+
+  "loginPrompt": "Bitte melde dich an, um fortzufahren",
   "namePlaceholder": "Name",
   "continue": "Weiter",
   "back": "Zurück",
-  "step2Title": "Wie alt ist {{childName}}?",
-  "step2Subtitle": "Wir personalisieren das Erlebnis",
-  "step3Subtitle": "We’ll personalize the experience",
   "agePlaceholder": "Alter",
-  "step3Title": "Wähle einen Spielkameraden für {{childName}}",
-  "step4Title": "Welche Sprache soll {{childName}} lernen?",
   "addChild": "Kind hinzufügen",
   "updateChild": "Kind aktualisieren",
   "adding": "Wird hinzugefügt...",
   "updating": "Wird aktualisiert...",
   "addFailed": "Hinzufügen fehlgeschlagen",
   "updateFailed": "Aktualisierung fehlgeschlagen",
-  "errorOccurred": "Etwas ist schiefgelaufen. Siehe Konsole.",
-  "congratulations": "Herzlichen Glückwunsch!",
-  "step5Message": "{{childName}} kann jetzt mit dem Lernen beginnen!"
+  "errorOccurred": "Ein Fehler ist aufgetreten. Siehe Konsole für Details.",
+  "congratulations": "Glückwunsch!",
+  "home": "Startseite",
+  "logout": "Abmelden"
 }

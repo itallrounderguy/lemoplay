@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Flag from 'react-world-flags';
 import './LanguageToggle.css';
 
 const LanguageToggle = ({ language, onChange }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const toggleRef = useRef(null);
 
   const toggleMenu = (e) => {
     e.stopPropagation();
@@ -15,8 +16,21 @@ const LanguageToggle = ({ language, onChange }) => {
     onChange(lang);
   };
 
+  // 👇 Close language menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (toggleRef.current && !toggleRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+    if (showMenu) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showMenu]);
+
   return (
-    <div className="language-toggle-wrapper" onClick={(e) => e.stopPropagation()}>
+    <div className="language-toggle-wrapper" ref={toggleRef}>
       {(language === 'en' || language === 'ar') ? (
         <Flag
           code={language === 'en' ? 'us' : 'sa'}
@@ -35,7 +49,7 @@ const LanguageToggle = ({ language, onChange }) => {
       )}
 
       {showMenu && (
-        <div className="language-menu" onClick={(e) => e.stopPropagation()}>
+        <div className="language-menu">
           <Flag
             code="us"
             className="language-flag"

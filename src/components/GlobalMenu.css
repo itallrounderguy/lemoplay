@@ -1,7 +1,12 @@
-.menu-button {
+/*globalMenu.css */
+.menu-wrapper {
   position: fixed;
   top: 1rem;
   right: 1rem;
+  z-index: 2000;
+}
+
+.menu-button {
   background-color: #00bcd4;
   color: white;
   border: none;
@@ -9,18 +14,14 @@
   padding: 8px 12px;
   font-size: 1rem;
   cursor: pointer;
-  z-index: 2000; /* Higher than game */
 }
 
 .mobile-menu {
-  position: fixed;
-  top: 3.5rem;
-  right: 1rem;
+  margin-top: 0.5rem;
   background-color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   padding: 0.5rem;
-   z-index: 2000; /* Higher than game */
 }
 
 .menu-item {
@@ -31,6 +32,10 @@
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.3s ease;
+}
+
+.menu-item + .menu-item {
+  margin-top: 6px;
 }
 
 .menu-item:hover {

@@ -1,6 +1,6 @@
 import { Edit3, Trash2, Users } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
-import './Profiles.css';
+import './ChildCard.css';
 import { avatarMap } from './avatars';
 
 
