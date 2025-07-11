@@ -1,19 +1,16 @@
 {
   "step1Title": "Gib den Namen des Spielers ein",
   "step1Subtitle": "Du kannst auch einen Spitznamen eingeben! :) Du kannst den Namen später jederzeit ändern.",
-
   "step2Title": "Wie alt ist {{childName}}?",
   "step2Subtitle": "Wir verwenden das Alter, um das Lernerlebnis zu personalisieren.",
-
   "step3Title": "Wähle deinen Spielhelden",
   "step3Subtitle": "Du kannst den Helden später jederzeit ändern.",
-
   "step4Title": "Welche Sprache soll {{childName}} lernen?",
   "step4Subtitle": "Du kannst die Sprache später jederzeit ändern.",
-
   "step5Message": "{{childName}} kann jetzt mit dem Lernen beginnen!",
-
   "loginPrompt": "Bitte melde dich an, um fortzufahren",
+
+  "introMessage": "Hallo! Füge ein Kind hinzu oder wähle eines, das du bereits erstellt hast.",
   "namePlaceholder": "Name",
   "continue": "Weiter",
   "back": "Zurück",
@@ -27,5 +24,12 @@
   "errorOccurred": "Ein Fehler ist aufgetreten. Siehe Konsole für Details.",
   "congratulations": "Glückwunsch!",
   "home": "Startseite",
-  "logout": "Abmelden"
+  "logout": "Abmelden",
+  "selectAdventure": "Wähle dein nächstes Abenteuer",
+  "language": "Sprache",
+  "math": "Mathe",
+  "logic": "Logik",
+  "memory": "Gedächtnis",
+  "addChildLabel": "Spieler hinzufügen"
+
 }

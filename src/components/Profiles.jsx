@@ -3,6 +3,7 @@ import { UserContext } from '../App';
 import ChildForm from './ChildForm';
 import ChildCard from './ChildCard';
 import './Profiles.css';
+import { useTranslation } from 'react-i18next';
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';
 
@@ -19,6 +20,7 @@ const Profile = ({
   const [showChildForm, setShowChildForm] = useState(false);
   const [editingChild, setEditingChild] = useState(null);
   const [language, setLanguage] = useState(localStorage.getItem('language') || 'no');
+  const { t } = useTranslation(); // ✅ move hook here
 
   useEffect(() => {
     if (!user) return;
@@ -123,8 +125,8 @@ const Profile = ({
       {!selectedChildId && (
         <div className="lemo-intro">
           <div className="lemo-bubble">
-            Hi! Add a child to begin, or select one you've already created.
-          </div>
+          {t('introMessage')}
+        </div>
         </div>
       )}
 
@@ -163,7 +165,7 @@ const Profile = ({
         <div className="add-child-wrapper">
           <div className="child-add-card" onClick={() => setShowChildForm(true)}>
             <div className="add-avatar">+</div>
-            <span className="add-label">Add a child</span>
+            <span className="add-label">{t('addChildLabel')}</span>
           </div>
         </div>
       )}

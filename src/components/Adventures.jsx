@@ -1,42 +1,43 @@
-// Adventures.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Adventures.css'; // Create this for styling
-import '../components/bubble.css'; // ✅ correct path
-
-const cardsData = [
-  {
-    id: 1,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/language_learn.png",
-    sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
-    text1: "Language",
-    route: "/language_learn",
-  },
-  {
-    id: 2,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/math_learn.png",
-    sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
-    text1: "Math",
-    route: "/math_learn",
-  },
-  {
-    id: 3,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/logic_learn.png",
-    sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
-    text1: "Logic",
-    route: "/logic_learn",
-  },
-  {
-    id: 4,
-    defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/memorycards.png",
-    sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
-    text1: "Memory",
-    route: "/memory_subtypes", // 🔁 NEW intermediate route,
-  },
-];
+import { useTranslation } from 'react-i18next';
+import './Adventures.css';
+import '../components/bubble.css';
 
 const Adventures = ({ childId }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const cardsData = [
+    {
+      id: 1,
+      defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/language_learn.png",
+      sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
+      text1: t('language'),
+      route: "/language_learn",
+    },
+    {
+      id: 2,
+      defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/math_learn.png",
+      sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
+      text1: t('math'),
+      route: "/math_learn",
+    },
+    {
+      id: 3,
+      defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/logic_learn.png",
+      sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
+      text1: t('logic'),
+      route: "/logic_learn",
+    },
+    {
+      id: 4,
+      defaultImageUrl: "https://learnify2025.s3.us-east-1.amazonaws.com/adventures/memorycards.png",
+      sound: "https://learnify2025.s3.us-east-1.amazonaws.com/sounds/click.mp3",
+      text1: t('memory'),
+      route: "/memory_subtypes",
+    },
+  ];
 
   const handleCardClick = (card) => {
     const audio = new Audio(card.sound);

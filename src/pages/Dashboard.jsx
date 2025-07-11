@@ -1,12 +1,16 @@
+/*Dashboard.jsx*/
+
 import { useState } from 'react';
 import Profiles from '../components/Profiles';
 import Adventures from '../components/Adventures';
 import useSelectedChild from '../hooks/useSelectedChild';
 import './Dashboard.css';
 import '../components/bubble.css'; 
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
   const [resetSelectionFn, setResetSelectionFn] = useState(() => () => {});
+  const { t } = useTranslation();
 
   const {
     selectedChildId,
@@ -29,7 +33,7 @@ const Dashboard = () => {
         <>
         
             {/* ✅ Animated dialog bubble */}
-            <div className="lemo-bubble"> select your next adventure </div>
+            <div className="lemo-bubble">{t('selectAdventure')}</div>
             
           
           <Adventures childId={selectedChildId} />
