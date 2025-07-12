@@ -15,6 +15,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const [avatar, setAvatar] = useState(existingChild?.avatar || avatars[0].label);
   const detectedLang = i18n.language?.split('-')[0] || 'en';
   const [language, setLanguage] = useState(existingChild?.language || detectedLang);
+  const [languageLearnLevel] = useState(existingChild?.LanguageLearnLevel || 1);
   const [loading, setLoading] = useState(false);
   const [iframeReady, setIframeReady] = useState(false);
 
@@ -91,6 +92,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
           childAge: parseInt(childAge, 10),
           avatar,
           language,
+          LanguageLearnLevel: languageLearnLevel,
         }),
       });
 

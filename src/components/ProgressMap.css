@@ -1,0 +1,35 @@
+.map-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 16px;
+  gap: 0px;
+  background: #f4f4f4;
+  scroll-behavior: smooth;
+  border-radius: 12px;
+}
+
+.tile {
+  padding: 0;
+  margin: 0;
+  flex: 0 0 auto;
+  display: inline-block;
+}
+
+.tile-img {
+  height: 256px;
+  width: 256px;
+  object-fit: cover; /* or "fill" if needed */
+  display: block;
+}
+
+.tile-label {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.8);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  pointer-events: none;
+}
