@@ -143,6 +143,10 @@ const Profile = ({
                 const lang = child.language || 'off';
                 setLanguage(lang);
                 localStorage.setItem('language', lang);
+
+                // ✅ Store LanguageLearnLevel too
+                const level = child.LanguageLearnLevel || 1;
+                localStorage.setItem('languageLearnLevel', level.toString());
               }
             }}
             onEdit={() => {

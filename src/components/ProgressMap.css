@@ -33,3 +33,15 @@
   font-size: 14px;
   pointer-events: none;
 }
+
+.tile.locked {
+  filter: grayscale(100%) brightness(0.7);
+  pointer-events: none;
+}
+
+.tile-marker {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+}
