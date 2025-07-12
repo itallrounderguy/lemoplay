@@ -9,6 +9,7 @@
 }
 
 .tile {
+  position: relative;
   padding: 0;
   margin: 0;
   flex: 0 0 auto;
@@ -18,7 +19,7 @@
 .tile-img {
   height: 256px;
   width: 256px;
-  object-fit: cover; /* or "fill" if needed */
+  object-fit: cover;
   display: block;
 }
 
@@ -27,7 +28,7 @@
   bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 14px;
@@ -44,4 +45,23 @@
   top: 10px;
   left: 10px;
   font-size: 20px;
+}
+
+.pulse {
+  animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 5px rgba(255, 200, 0, 0.8);
+  }
+  50% {
+    transform: scale(1.2);
+    text-shadow: 0 0 15px rgba(255, 200, 0, 1);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 5px rgba(255, 200, 0, 0.8);
+  }
 }
