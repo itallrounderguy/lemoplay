@@ -1,12 +1,4 @@
-.map-container {
-  display: flex;
-  overflow-x: auto;
-  padding: 16px;
-  gap: 0px;
-  background: #f4f4f4;
-  scroll-behavior: smooth;
-  border-radius: 12px;
-}
+/*ProgressMap*/
 
 .tile {
   position: relative;
@@ -64,4 +56,15 @@
     transform: scale(1);
     text-shadow: 0 0 5px rgba(255, 200, 0, 0.8);
   }
+}
+
+.map-container {
+  position: relative; /* Needed for iframe absolute positioning */
+  display: flex;
+  overflow-x: auto;
+  padding: 16px;
+  gap: 0;
+  background: #f4f4f4;
+  scroll-behavior: smooth;
+  border-radius: 12px;
 }
