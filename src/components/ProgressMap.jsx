@@ -5,6 +5,18 @@ const NUM_TILES = 8;
 
 const ProgressMap = ({ onTileClick }) => {
   const languageLearnLevel = parseInt(localStorage.getItem('languageLearnLevel') || '1', 10);
+
+  const currentAvatar = localStorage.getItem('avatar') || 'Char1';
+  const avatar = currentAvatar.trim();
+
+  console.log('[ProgressMap] ⛳ languageLearnLevel:', languageLearnLevel);
+  console.log('[ProgressMap] 🧍 currentAvatar from localStorage:', currentAvatar);
+  console.log('[ProgressMap] 🧍 trimmed avatar:', avatar);
+
+  const animationUrl = `https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/${avatar.toLowerCase()}/${avatar.toLowerCase()}.html?scale=0.5`;
+
+  console.log('[ProgressMap] 🎬 animationUrl:', animationUrl);
+
   const mapRef = useRef(null);
   const currentTileRef = useRef(null);
   const animRef = useRef(null);
@@ -20,38 +32,34 @@ const ProgressMap = ({ onTileClick }) => {
     };
   });
 
-  // Scroll and position iframe on mount
   useEffect(() => {
-    const updateAnimPosition = () => {
-  const tileEl = currentTileRef.current;
-  const mapEl = mapRef.current;
-  if (!tileEl || !mapEl) return;
+    const tileEl = currentTileRef.current;
+    const mapEl = mapRef.current;
+    if (!tileEl || !mapEl) return;
 
-  const iframeWidth = 256;
-  const iframeHeight = 256;
+    // Auto-scroll to current level
+    tileEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
-const tileRect = tileEl.getBoundingClientRect();
-const mapRect = mapEl.getBoundingClientRect();
+    const iframeWidth = 256;
+    const iframeHeight = 256;
 
-const scrollLeft = mapEl.scrollLeft;
-const scrollTop = mapEl.scrollTop;
+    const centerX = tileEl.offsetLeft + tileEl.offsetWidth / 2;
+    const centerY = tileEl.offsetTop + tileEl.offsetHeight / 2;
 
-const centerX = tileEl.offsetLeft + tileEl.offsetWidth / 2;
-const centerY = tileEl.offsetTop + tileEl.offsetHeight / 2;
+    // Animate in from top
+    setAnimPos({
+      left: centerX - iframeWidth / 2,
+      top: -iframeHeight,
+      visible: true,
+    });
 
-setAnimPos({
-  left: centerX - 128, // iframeWidth / 2
-  top: centerY - 128,  // iframeHeight / 2
-  visible: true,
-});
-
-};
-
-
-    updateAnimPosition();
-    window.addEventListener('resize', updateAnimPosition);
-
-    return () => window.removeEventListener('resize', updateAnimPosition);
+    setTimeout(() => {
+      setAnimPos({
+        left: centerX - iframeWidth / 2,
+        top: centerY - iframeHeight / 2,
+        visible: true,
+      });
+    }, 50);
   }, []);
 
   return (
@@ -69,12 +77,11 @@ setAnimPos({
         </div>
       ))}
 
-      {/* 🪂 Animation over current tile */}
       {animPos.visible && (
         <iframe
           ref={animRef}
-          className="map-animation"
-          src="https://learnify2025.s3.us-east-1.amazonaws.com/spineanimations/char_1/char_1.html?animation=JetPack&scale=0.5"
+          className="map-animation flying-in"
+          src={animationUrl}
           title="Jetpack Lemo"
           width="256"
           height="256"
@@ -84,7 +91,9 @@ setAnimPos({
             top: animPos.top,
             pointerEvents: 'none',
             zIndex: 10,
-            transform: 'scaleX(-1)', // ✅ flips horizontally
+            //transform: 'scaleX(-1)',
+            border: 'none',
+            transition: 'top 1s ease-out',
           }}
         />
       )}

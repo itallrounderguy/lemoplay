@@ -147,6 +147,9 @@ const Profile = ({
                 // ✅ Store LanguageLearnLevel too
                 const level = child.LanguageLearnLevel || 1;
                 localStorage.setItem('languageLearnLevel', level.toString());
+
+                const avatar = child.avatar || 'Char1';
+                localStorage.setItem('avatar', avatar); // ✅ This fixes your ProgressMap issue
               }
             }}
             onEdit={() => {
