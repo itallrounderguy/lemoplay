@@ -136,22 +136,34 @@ const Profile = ({
             key={child.childId}
             child={child}
             isSelected={selectedChildId === child.childId}
-            onSelect={() => {
-              if (!selectedChildId) {
-                setSelectedChildId(child.childId);
-                setSelectedChildData(child);
-                const lang = child.language || 'off';
-                setLanguage(lang);
-                localStorage.setItem('language', lang);
+         onSelect={() => {
+                        if (!selectedChildId) {
+                          console.log('[Profile] 👤 Child selected:', child.childName);
+                          console.log('[Profile] 📦 Full child object:', child);
 
-                // ✅ Store LanguageLearnLevel too
-                const level = child.LanguageLearnLevel || 1;
-                localStorage.setItem('languageLearnLevel', level.toString());
+                          const lang = child.language || 'off';
+                          const level = child.LanguageLearnLevel || 1;
+                          const avatar = child.avatar || 'Char1';
 
-                const avatar = child.avatar || 'Char1';
-                localStorage.setItem('avatar', avatar); // ✅ This fixes your ProgressMap issue
-              }
-            }}
+                          console.log('[Profile] 💾 Writing to localStorage:');
+                          console.log(' - language:', lang);
+                          console.log(' - languageLearnLevel:', level);
+                          console.log(' - avatar:', avatar);
+
+                          // 🔁 Set React state
+                          setSelectedChildId(child.childId);
+                          setSelectedChildData(child);
+                          setLanguage(lang);
+
+                          // 💾 Set persistent storage
+                          localStorage.setItem('language', lang);
+                          localStorage.setItem('languageLearnLevel', level.toString());
+                          localStorage.setItem('avatar', avatar);
+                        } else {
+                          console.log('[Profile] ⚠️ onSelect called, but a child is already selected. Skipping.');
+                        }
+                      }}
+
             onEdit={() => {
               setEditingChild(child);
               setShowChildForm(true);
@@ -185,10 +197,30 @@ const Profile = ({
             setEditingChild(null);
           }}
           onSuccess={async () => {
-            await refreshChildren();
-            setShowChildForm(false);
-            setEditingChild(null);
-          }}
+  const res = await fetch(`${CHILDREN_API}/${user.sub}`, {
+    headers: { 'Content-Type': 'application/json', 'x-user-id': user.sub },
+  });
+
+  if (res.ok) {
+    const updatedChildren = await res.json();
+    setChildren(updatedChildren);
+    setShowChildForm(false);
+    setEditingChild(null);
+
+    if (selectedChildId) {
+      const updatedChild = updatedChildren.find(c => c.childId === selectedChildId);
+      if (updatedChild) {
+        console.log('[Profile] 🛠 Updating localStorage with fresh child data');
+        localStorage.setItem('language', updatedChild.language || 'off');
+        localStorage.setItem('languageLearnLevel', (updatedChild.LanguageLearnLevel || 1).toString());
+        localStorage.setItem('avatar', updatedChild.avatar || 'Char1');
+      }
+    }
+  } else {
+    console.error('[Profile] ❌ Failed to refresh children after save');
+  }
+}}
+
           existingChild={editingChild}
         />
       )}

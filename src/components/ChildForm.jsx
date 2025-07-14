@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import './ChildForm.css';
 import Flag from 'react-world-flags';
 import { useTranslation } from 'react-i18next';
 import avatars from './avatars';
 import i18n from 'i18next';
+import './ChildForm.css';
 
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const { t } = useTranslation();
-
   const isEditing = !!existingChild;
+
   const [step, setStep] = useState(1);
   const [childName, setChildName] = useState(existingChild?.childName || '');
   const [childAge, setChildAge] = useState(existingChild?.childAge?.toString() || '');
@@ -34,6 +34,7 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   useEffect(() => {
     const handleSpineReady = (event) => {
       if (event.data?.type === 'spine-ready') {
+        console.log('[ChildForm] 🧬 Spine ready');
         setIframeReady(true);
       }
     };
@@ -42,6 +43,8 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   }, []);
 
   useEffect(() => {
+    console.log('[ChildForm] 🧭 Step changed to:', step);
+
     const audio = audioRef.current;
     if (!iframeReady || (step === 1 && hasPlayedIntro.current)) return;
 
@@ -75,6 +78,13 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    console.log('[ChildForm] 📤 Submitting form...');
+    console.log(' - Name:', childName);
+    console.log(' - Age:', childAge);
+    console.log(' - Avatar:', avatar);
+    console.log(' - Language:', language);
+    console.log(' - LanguageLearnLevel:', languageLearnLevel);
+
     try {
       const method = isEditing ? 'PUT' : 'POST';
       const url = isEditing
@@ -99,17 +109,19 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
       const data = await res.json();
 
       if (res.ok) {
+        console.log('[ChildForm] ✅ Save success');
         setStep(5);
         setTimeout(() => {
           onSuccess();
           onClose();
         }, 5000);
       } else {
+        console.error('[ChildForm] ❌ Save failed:', data.message);
         alert((isEditing ? t('updateFailed') : t('addFailed')) + ': ' + data.message);
       }
     } catch (err) {
+      console.error('[ChildForm] ❗ Error occurred:', err);
       alert(t('errorOccurred'));
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -192,7 +204,10 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
                 <div
                   key={label}
                   className={`avatar-option ${avatar === label ? 'selected' : ''}`}
-                  onClick={() => setAvatar(label)}
+                  onClick={() => {
+                    console.log('[ChildForm] 🎨 Avatar selected:', label);
+                    setAvatar(label);
+                  }}
                 >
                   <img src={src} alt={label} />
                 </div>
@@ -213,14 +228,20 @@ const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
             <div className="flag-select-grid">
               <div
                 className={`flag-option ${language === 'en' ? 'selected' : ''}`}
-                onClick={() => setLanguage('en')}
+                onClick={() => {
+                  console.log('[ChildForm] 🇺🇸 Language selected: en');
+                  setLanguage('en');
+                }}
               >
                 <Flag code="us" style={{ width: 60, height: 40 }} />
                 <p>English</p>
               </div>
               <div
                 className={`flag-option ${language === 'ar' ? 'selected' : ''}`}
-                onClick={() => setLanguage('ar')}
+                onClick={() => {
+                  console.log('[ChildForm] 🇸🇦 Language selected: ar');
+                  setLanguage('ar');
+                }}
               >
                 <Flag code="sa" style={{ width: 60, height: 40 }} />
                 <p>العربية</p>

@@ -3,7 +3,6 @@ import LanguageToggle from './LanguageToggle';
 import './ChildCard.css';
 import { avatarMap } from './avatars';
 
-
 const ChildCard = ({
   child,
   isSelected,
@@ -14,23 +13,55 @@ const ChildCard = ({
   language,
   onLanguageChange,
 }) => {
+  const handleSelect = () => {
+    console.log('[ChildCard] ✅ onSelect triggered for:', child.childName);
+    console.log('[ChildCard] 📦 Child data:', child);
+    onSelect();
+  };
+
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    console.log('[ChildCard] ✏️ Edit clicked for:', child.childName);
+    onEdit();
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    console.log('[ChildCard] 🗑️ Delete clicked for:', child.childName);
+    onDelete();
+  };
+
+  const handleSwitch = (e) => {
+    e.stopPropagation();
+    console.log('[ChildCard] 🔁 Switch clicked for:', child.childName);
+    onSwitch();
+  };
+
+  const handleLanguageChange = (newLang) => {
+    console.log('[ChildCard] 🌐 Language changed for:', child.childName, '→', newLang);
+    onLanguageChange(newLang);
+  };
+
+  const avatarSrc = avatarMap[child.avatar] || avatarMap.Char1;
+  console.log('[ChildCard] 🎭 Rendering avatar:', avatarSrc, 'for', child.childName);
+
   return (
-    <div className="child-card" onClick={onSelect}>
+    <div className="child-card" onClick={handleSelect}>
       {isSelected && (
         <div className="child-tools">
-          <Edit3 size={18} onClick={(e) => { e.stopPropagation(); onEdit(); }} />
-          <Trash2 size={18} onClick={(e) => { e.stopPropagation(); onDelete(); }} />
-          <Users  size={18} onClick={(e) => { e.stopPropagation(); onSwitch(); }} title="Switch Child" />
+          <Edit3 size={18} onClick={handleEdit} />
+          <Trash2 size={18} onClick={handleDelete} />
+          <Users size={18} onClick={handleSwitch} title="Switch Child" />
           <LanguageToggle
             language={language}
-            onChange={onLanguageChange}
+            onChange={handleLanguageChange}
           />
         </div>
       )}
 
       <div className="child-avatar">
         <img
-          src={avatarMap[child.avatar] || avatarMap.Char1}
+          src={avatarSrc}
           alt={child.childName}
           className="child-avatar-img"
         />
