@@ -1,9 +1,10 @@
 // GlobalMenu.jsx
 import { useState, useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../App';
+import { UserContext } from '../../App';
 import LogoutModal from './LogoutModal';
-import './GlobalMenu.css';
+import "@styles/GlobalMenu.css";
+
 import { Menu } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useSelectedChild from '../hooks/useSelectedChild';
-import { useGameAudio } from '../hooks/useGameAudio';
-import { useGameMessaging } from '../hooks/useGameMessaging';
-import { GAME_URL, GAME_ORIGIN, ANIMATION_IFRAME_URL, DIFFICULTY_LEVELS } from '../hooks/memoryGame';
 
-import GlobalMenu from '../components/GlobalMenu';
-import CelebrateModal from '../components/CelebrateModal';
+import { useGameMessaging } from '@hooks/useGameMessaging';
+import { useGameAudio } from '@hooks/useGameAudio';
+import useSelectedChild from '@hooks/useSelectedChild';
+
+import { GAME_URL, GAME_ORIGIN, ANIMATION_IFRAME_URL, DIFFICULTY_LEVELS } from '@hooks/memoryGame';
+
+import GlobalMenu from '@components/layout/GlobalMenu';
+import CelebrateModal from '@components/ui/CelebrateModal';
+
 import { ArrowLeft } from 'lucide-react';
 
-import './MemoryGames.css';
-import '../components/bubble.css';
+import '@styles/MemoryGames.css'; // ✅ correct alias path
+
+import '@styles/bubble.css'; // Global style path, or update as needed
 
 const MemoryGames = () => {
   const location = useLocation();
@@ -23,16 +27,13 @@ const MemoryGames = () => {
 
   const [gameLoaded, setGameLoaded] = useState(false);
   const [showGame, setShowGame] = useState(false);
-  //const [levelIndex, setLevelIndex] = useState(0);
   const [levelIndex, setLevelIndex] = useState(Math.floor(DIFFICULTY_LEVELS.length / 2));
-
   const [showCelebration, setShowCelebration] = useState(false);
 
-  const topic = location.state?.topic || 'nothing'; // safe default;
+  const topic = location.state?.topic || 'nothing';
   const lang = localStorage.getItem('language') || 'en';
-  const audioMap = useGameAudio(lang, topic); // ✅ now passing topic
+  const audioMap = useGameAudio(lang, topic);
 
-  
   const { rows, cols } = DIFFICULTY_LEVELS[levelIndex];
   const rawChildId = location.state?.childId || selectedChildId;
   const childId = rawChildId || 'default';
@@ -54,15 +55,12 @@ const MemoryGames = () => {
   };
 
   const switchAnimation = (animationName) => {
-    if (animIframeRef.current?.contentWindow) {
-      animIframeRef.current.contentWindow.postMessage(
-        { action: 'changeAnimation', animation: animationName },
-        '*'
-      );
-    }
+    animIframeRef.current?.contentWindow?.postMessage(
+      { action: 'changeAnimation', animation: animationName },
+      '*'
+    );
   };
 
-  // ✅ Now sendGameSetup is defined BEFORE being passed in
   useGameMessaging({
     audioMap,
     setGameLoaded,
@@ -88,7 +86,7 @@ const MemoryGames = () => {
     setShowGame(false);
   };
 
-  return (
+    return (
     <div>
       <button className="back-button" onClick={handleBack}>
         <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />

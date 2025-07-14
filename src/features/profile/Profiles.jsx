@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../App';
-import ChildForm from './ChildForm';
-import ChildCard from './ChildCard';
-import './Profiles.css';
+import { UserContext } from '../../App';
+import ChildForm from "./ChildForm";
+import ChildCard from "./ChildCard";
+
+import "@styles/Profiles.css";
+
 import { useTranslation } from 'react-i18next';
 
 const CHILDREN_API = 'https://qnzvrnxssb.execute-api.us-east-1.amazonaws.com/prod/children';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './Adventures.css';
+import "@styles/Adventures.css";
+
 import { ArrowLeft } from 'lucide-react';
 
 const subCardsData = [

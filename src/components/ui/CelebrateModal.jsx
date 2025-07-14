@@ -1,5 +1,6 @@
 // src/components/CelebrateModal.jsx
-import './CelebrateModal.css';
+import "@styles/CelebrateModal.css";
+
 
 const CelebrateModal = ({ onConfirm, onCancel }) => {
   // 🔊 Preload audio

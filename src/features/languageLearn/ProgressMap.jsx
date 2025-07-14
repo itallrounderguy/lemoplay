@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './ProgressMap.css';
+import "@styles/ProgressMap.css";
+
 
 const NUM_TILES = 8;
 

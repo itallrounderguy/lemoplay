@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { UserContext } from '../App';
+import { UserContext } from '../../App';
 import { useTranslation } from 'react-i18next';
 
 const Login = () => {

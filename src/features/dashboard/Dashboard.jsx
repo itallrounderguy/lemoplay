@@ -1,11 +1,14 @@
 /*Dashboard.jsx*/
 
 import { useState } from 'react';
-import Profiles from '../components/Profiles';
-import Adventures from '../components/Adventures';
-import useSelectedChild from '../hooks/useSelectedChild';
-import './Dashboard.css';
-import '../components/bubble.css'; 
+import Profiles from "@features/profile/Profiles";
+
+import Adventures from './Adventures';
+import useSelectedChild from '../../hooks/useSelectedChild';
+
+import "@styles/Dashboard.css";
+import "@styles/bubble.css";
+
 import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {

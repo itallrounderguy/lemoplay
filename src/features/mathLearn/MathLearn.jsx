@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import useSelectedChild from '../hooks/useSelectedChild';
+import useSelectedChild from '../../hooks/useSelectedChild';
 
-const LogicLearn = () => {
+const MathLearn = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedChildId } = useSelectedChild();
@@ -24,4 +24,4 @@ const LogicLearn = () => {
   );
 };
 
-export default LogicLearn;
+export default MathLearn;

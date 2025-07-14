@@ -1,5 +1,6 @@
 // src/components/LogoutModal.jsx
-import './LogoutModal.css';
+import "@styles/LogoutModal.css";
+
 
 const LogoutModal = ({ onConfirm, onCancel }) => {
   return (

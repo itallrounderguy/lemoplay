@@ -1,7 +1,7 @@
 import { Edit3, Trash2, Users } from 'lucide-react';
-import LanguageToggle from './LanguageToggle';
-import './ChildCard.css';
-import { avatarMap } from './avatars';
+import LanguageToggle from "@components/ui/LanguageToggle";
+import '@styles/ChildCard.css';
+import { avatarMap } from '../../components/constants/avatars';
 
 const ChildCard = ({
   child,

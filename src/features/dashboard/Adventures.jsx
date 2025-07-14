@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import './Adventures.css';
-import '../components/bubble.css';
+import "@styles/bubble.css"; // ✅
+
+import '@styles/bubble.css';
+
 
 const Adventures = ({ childId }) => {
   const { t } = useTranslation();

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Flag from 'react-world-flags';
 import { useTranslation } from 'react-i18next';
-import avatars from './avatars';
+import avatars from '../../components/constants/avatars';
 import i18n from 'i18next';
-import './ChildForm.css';
+import "@styles/ChildForm.css";
+
 
 const ChildForm = ({ userId, onClose, onSuccess, existingChild }) => {
   const { t } = useTranslation();

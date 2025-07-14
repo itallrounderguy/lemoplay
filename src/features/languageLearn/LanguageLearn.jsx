@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import useSelectedChild from '../hooks/useSelectedChild';
-import ProgressMap from '../components/ProgressMap';
+import useSelectedChild from '../../hooks/useSelectedChild';
+import ProgressMap from "./ProgressMap";
+
+
 
 const LANGUAGE_GAME_URL = "https://learnifylevels.s3.us-east-1.amazonaws.com/LanguageLearn/alphabets/index.html";
 
